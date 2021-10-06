@@ -1,4 +1,4 @@
-package com.template.auth.exception
+package com.template.security.exception
 
 import org.springframework.security.core.AuthenticationException
 
