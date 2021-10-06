@@ -42,14 +42,15 @@ dependencies {
     implementation("io.projectreactor.tools:blockhound:1.0.6.RELEASE")
     implementation("io.jsonwebtoken:jjwt:0.9.1")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
-    implementation("mysql:mysql-connector-java")
+    implementation("dev.miku:r2dbc-mysql:0.8.2.RELEASE")
     implementation("org.hibernate:hibernate-core:5.5.7.Final")
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("org.springframework.boot:spring-boot-starter-test") {
+    }
     testImplementation("io.projectreactor:reactor-test")
     testImplementation("io.projectreactor.tools:blockhound-junit-platform:1.0.6.RELEASE")
     testImplementation("org.junit.platform:junit-platform-launcher:1.8.0")
-    testImplementation("org.springframework.boot.experimental:spring-boot-test-autoconfigure-r2dbc")
     testImplementation("com.h2database:h2")
+    testImplementation("io.r2dbc:r2dbc-h2")
 }
 
 tasks.withType<KotlinCompile> {
