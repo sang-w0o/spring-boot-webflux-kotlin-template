@@ -14,7 +14,7 @@ class GlobalErrorAttributes : DefaultErrorAttributes() {
     val message: String = "Error occurred."
 
     override fun getErrorAttributes(request: ServerRequest, options: ErrorAttributeOptions): MutableMap<String, Any> {
-        val map =  super.getErrorAttributes(request, options)
+        val map = super.getErrorAttributes(request, options)
         map["status"] = httpStatus
         map["message"] = message
         return map

@@ -12,16 +12,16 @@ import reactor.core.publisher.Mono
 class JwtServerAuthenticationConverter : ServerAuthenticationConverter {
     override fun convert(exchange: ServerWebExchange): Mono<Authentication> {
         return Mono.just(exchange)
-            .flatMap { Mono.justOrEmpty(extractTokenFromHeader(it))}
+            .flatMap { Mono.justOrEmpty(extractTokenFromHeader(it)) }
             .map { UsernamePasswordAuthenticationToken(it, it) }
     }
 
     private fun extractTokenFromHeader(exchange: ServerWebExchange): String {
         val authorizationHeader = exchange.request.headers["Authorization"]
-        if(authorizationHeader.isNullOrEmpty()) {
+        if (authorizationHeader.isNullOrEmpty()) {
             throw AuthenticateException("JWT Header is missing.")
         } else {
-            if(authorizationHeader[0].contains("Bearer")) {
+            if (authorizationHeader[0].contains("Bearer")) {
                 return authorizationHeader[0].replace("Bearer ", "")
             } else throw AuthenticateException("Invalid Authorization header scheme.")
         }
