@@ -9,14 +9,17 @@ import org.springframework.security.config.web.server.invoke
 import org.springframework.security.web.server.SecurityWebFilterChain
 import org.springframework.security.web.server.authentication.AuthenticationWebFilter
 import org.springframework.security.web.server.authentication.ServerAuthenticationConverter
+import org.springframework.security.web.server.authorization.ServerAccessDeniedHandler
 
 @EnableWebFluxSecurity
 class SecurityConfig(
     private val jwtAuthenticationConverter: ServerAuthenticationConverter,
-    private val jwtAuthenticationManager: ReactiveAuthenticationManager
+    private val jwtAuthenticationManager: ReactiveAuthenticationManager,
+    private val serverAccessDeniedHandler: ServerAccessDeniedHandler
 ) {
     @Bean
     fun securityWebFilterChain(http: ServerHttpSecurity): SecurityWebFilterChain {
+        println("securing..")
         val jwtAuthenticationWebFilter = AuthenticationWebFilter(jwtAuthenticationManager)
         jwtAuthenticationWebFilter.setServerAuthenticationConverter(jwtAuthenticationConverter)
         return http {
@@ -28,6 +31,9 @@ class SecurityConfig(
                 authorize("/v1/**", authenticated)
             }
             addFilterAt(jwtAuthenticationWebFilter, SecurityWebFiltersOrder.AUTHENTICATION)
+            exceptionHandling {
+                accessDeniedHandler = serverAccessDeniedHandler
+            }
         }
     }
 }

@@ -9,9 +9,8 @@ data class ErrorResponseDto(
         pattern = "yyyy-MM-dd HH:mm:ss",
         locale = "Asia/Seoul"
     )
-    val timestamp: LocalDateTime,
+    val timestamp: LocalDateTime = LocalDateTime.now(),
     val status: Int,
-    val error: String,
     val message: String,
     val path: String,
     val remote: String?

@@ -1,26 +1,21 @@
 package com.template.domain
 
-import javax.persistence.Column
-import javax.persistence.Entity
-import javax.persistence.GeneratedValue
-import javax.persistence.GenerationType
-import javax.persistence.Id
-import javax.persistence.Table
+import org.springframework.data.annotation.Id
+import org.springframework.data.relational.core.mapping.Column
+import org.springframework.data.relational.core.mapping.Table
 
-@Entity
-@Table(name = "users")
+@Table(value = "users")
 class User(name: String, email: String, password: String) {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false, name = "user_id")
+    @Column(value = "user_id")
     var id: Int? = null
 
-    @Column(nullable = false, length = 100)
+    @Column
     var name: String = name
 
-    @Column(length = 60)
+    @Column
     var password: String? = password
 
-    @Column(nullable = false, length = 100, unique = true)
+    @Column
     var email: String = email
 }
