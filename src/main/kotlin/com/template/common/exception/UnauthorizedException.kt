@@ -4,4 +4,4 @@ import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.ResponseStatus
 
 @ResponseStatus(HttpStatus.UNAUTHORIZED)
-abstract class UnauthorizedException(message: String) : ApiException(message, HttpStatus.UNAUTHORIZED)
+abstract class UnauthorizedException(message: String) : ApiException(HttpStatus.UNAUTHORIZED, message)

@@ -1,7 +1,6 @@
-package com.template.auth.tools
+package com.template.security.tools
 
-import com.template.auth.exception.AuthenticateException
-import com.template.security.service.UserDetailsImpl
+import com.template.security.exception.AuthenticateException
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.ExpiredJwtException
 import io.jsonwebtoken.Jwts
@@ -9,8 +8,9 @@ import io.jsonwebtoken.MalformedJwtException
 import io.jsonwebtoken.SignatureAlgorithm
 import io.jsonwebtoken.SignatureException
 import io.jsonwebtoken.UnsupportedJwtException
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
+import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Component
+import reactor.core.publisher.Mono
 import java.util.Date
 import java.util.function.Function
 
@@ -53,7 +53,7 @@ class JwtTokenUtil(private val jwtProperties: JwtProperties) {
             .compact()
     }
 
-    fun <T> extractClaim(token: String, claimResolver: Function<Claims, T>): T {
+    private fun <T> extractClaim(token: String, claimResolver: Function<Claims, T>): T {
         return claimResolver.apply(extractAllClaims(token))
     }
 
@@ -81,8 +81,9 @@ class JwtTokenUtil(private val jwtProperties: JwtProperties) {
         return createToken(claims, jwtProperties.refreshTokenExp)
     }
 
-    fun getAuthentication(token: String): UsernamePasswordAuthenticationToken {
-        val userDetails = UserDetailsImpl(extractUserId(token))
-        return UsernamePasswordAuthenticationToken(userDetails, "", userDetails.authorities)
+    fun getAuthentication(authentication: Authentication): Mono<Authentication> {
+        val token = authentication.credentials.toString()
+        verify(token)
+        return Mono.just(authentication)
     }
 }

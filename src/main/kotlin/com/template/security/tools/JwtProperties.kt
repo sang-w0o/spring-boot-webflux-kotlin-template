@@ -1,4 +1,4 @@
-package com.template.auth.tools
+package com.template.security.tools
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.stereotype.Component
