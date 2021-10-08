@@ -1,6 +1,5 @@
 package com.template.config
 
-import com.template.common.exception.ApiException
 import com.template.security.attributes.GlobalErrorAttributes
 import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.web.WebProperties
@@ -39,13 +38,11 @@ class GlobalExceptionHandler(
 
     private fun createErrorResponse(request: ServerRequest): Mono<ServerResponse> {
         val throwable = getError(request)
-        println(throwable.javaClass.simpleName)
         var status = HttpStatus.INTERNAL_SERVER_ERROR
         when (throwable) {
             is ResponseStatusException -> {
                 status = throwable.status
             }
-            is ApiException -> { status = throwable.status }
             else -> logger.error(throwable.stackTraceToString())
         }
         val errorPropertiesMap = getErrorAttributes(request, ErrorAttributeOptions.defaults())

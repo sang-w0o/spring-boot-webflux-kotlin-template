@@ -28,14 +28,13 @@ class SecurityConfig(
             securityMatcher(
                 NegatedServerWebExchangeMatcher(ServerWebExchangeMatchers.pathMatchers(HttpMethod.GET, "/actuator/**"))
             )
-            authorizeExchange { authorize(anyExchange, authenticated) }
+            authorizeExchange { authorize(anyExchange, permitAll) }
             httpBasic { disable() }
             formLogin { disable() }
             csrf { disable() }
             logout { disable() }
             authorizeExchange {
                 authorize("/v1/**", authenticated)
-                authorize("/actuator/**", permitAll)
             }
             addFilterAt(jwtAuthenticationWebFilter, SecurityWebFiltersOrder.AUTHENTICATION)
             exceptionHandling {

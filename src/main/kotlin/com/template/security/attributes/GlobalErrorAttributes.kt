@@ -1,6 +1,5 @@
 package com.template.security.attributes
 
-import com.template.common.exception.ApiException
 import org.springframework.boot.web.error.ErrorAttributeOptions
 import org.springframework.boot.web.reactive.error.DefaultErrorAttributes
 import org.springframework.http.HttpStatus
@@ -14,7 +13,7 @@ import java.time.format.DateTimeFormatter
 class GlobalErrorAttributes : DefaultErrorAttributes() {
 
     override fun getErrorAttributes(request: ServerRequest, options: ErrorAttributeOptions): MutableMap<String, Any> {
-        val map = super.getErrorAttributes(request, options)
+        val map = mutableMapOf<String, Any>()
         val throwable = getError(request)
         fillErrorAttributes(request, throwable, map)
         return map
@@ -25,15 +24,9 @@ class GlobalErrorAttributes : DefaultErrorAttributes() {
         when (throwable) {
             is ResponseStatusException -> {
                 map["status"] = throwable.status.value()
-                map["error"] = throwable.message
-            }
-            is ApiException -> {
-                map["status"] = throwable.status.value()
-                map["error"] = throwable.message
             }
             else -> {
                 map["status"] = HttpStatus.INTERNAL_SERVER_ERROR.value()
-                map["error"] = HttpStatus.INTERNAL_SERVER_ERROR.reasonPhrase
             }
         }
     }

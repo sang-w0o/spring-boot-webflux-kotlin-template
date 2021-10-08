@@ -45,7 +45,7 @@ class JwtTokenUtilTest : BaseUnitTest() {
     fun oldAccessTokenIsExpired() {
         val oldAccessToken = generateExpiredToken(jwtProperties.accessTokenExp)
         val exception = assertFailsWith<AuthenticateException> { jwtTokenUtil.verify(oldAccessToken) }
-        assertEquals("Jwt 토큰이 만료되었습니다.", exception.message!!)
+        assertEquals("Jwt 토큰이 만료되었습니다.", exception.message)
     }
 
     @DisplayName("만료된 RefreshToken 검증")
@@ -53,7 +53,7 @@ class JwtTokenUtilTest : BaseUnitTest() {
     fun oldRefreshTokenIsExpired() {
         val oldRefreshToken = generateExpiredToken(jwtProperties.refreshTokenExp)
         val exception = assertFailsWith<AuthenticateException> { jwtTokenUtil.verify(oldRefreshToken) }
-        assertEquals("Jwt 토큰이 만료되었습니다.", exception.message!!)
+        assertEquals("Jwt 토큰이 만료되었습니다.", exception.message)
     }
 
     @DisplayName("잘못된 형식의 Jwt 토큰")
@@ -61,7 +61,7 @@ class JwtTokenUtilTest : BaseUnitTest() {
     fun wrongToken() {
         val wrongToken = "WRONG TOKEN"
         val exception = assertFailsWith<AuthenticateException> { jwtTokenUtil.verify(wrongToken) }
-        assertEquals("잘못된 형식의 Jwt 토큰입니다.", exception.message!!)
+        assertEquals("잘못된 형식의 Jwt 토큰입니다.", exception.message)
     }
 
     @DisplayName("Signature가 잘못된 Jwt가 주어진 경우")
@@ -69,7 +69,7 @@ class JwtTokenUtilTest : BaseUnitTest() {
     fun wrongSignatureToken() {
         val wrongToken = generateOtherSignatureToken(jwtProperties.accessTokenExp)
         val exception = assertFailsWith<AuthenticateException> { jwtTokenUtil.verify(wrongToken) }
-        assertEquals("Jwt Signature이 잘못된 값입니다.", exception.message!!)
+        assertEquals("Jwt Signature이 잘못된 값입니다.", exception.message)
     }
 
     @DisplayName("Jwt Payload에 userId가 없는 경우")
@@ -82,7 +82,7 @@ class JwtTokenUtilTest : BaseUnitTest() {
             .signWith(SignatureAlgorithm.HS256, jwtProperties.secret)
             .compact()
         val exception = assertFailsWith<AuthenticateException> { jwtTokenUtil.extractUserId(wrongToken) }
-        assertEquals("JWT Claim에 userId가 없습니다.", exception.message!!)
+        assertEquals("JWT Claim에 userId가 없습니다.", exception.message)
     }
 
     private fun generateExpiredToken(exp: Int): String {
