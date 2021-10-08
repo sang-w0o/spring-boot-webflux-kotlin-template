@@ -1,5 +1,5 @@
 package com.template.security.exception
 
-import org.springframework.security.core.AuthenticationException
+import com.template.common.exception.UnauthorizedException
 
-class AuthenticateException(message: String) : AuthenticationException(message)
+class AuthenticateException(message: String) : UnauthorizedException(message)
