@@ -2,6 +2,7 @@ package com.template.config
 
 import com.template.common.exception.ApiException
 import com.template.security.attributes.GlobalErrorAttributes
+import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.web.WebProperties
 import org.springframework.boot.autoconfigure.web.reactive.error.AbstractErrorWebExceptionHandler
 import org.springframework.boot.web.error.ErrorAttributeOptions
@@ -25,6 +26,7 @@ class GlobalExceptionHandler(
 ) : AbstractErrorWebExceptionHandler(
     errorAttributes, WebProperties.Resources(), applicationContext
 ) {
+    private val logger = LoggerFactory.getLogger(GlobalExceptionHandler::class.java)
     init {
         this.setMessageReaders(configurer.readers)
         this.setMessageWriters(configurer.writers)
@@ -38,6 +40,7 @@ class GlobalExceptionHandler(
         val throwable = getError(request)
         var status = HttpStatus.INTERNAL_SERVER_ERROR
         if (throwable is ApiException) status = throwable.httpStatus
+        else logger.error(throwable.stackTraceToString())
         val errorPropertiesMap = getErrorAttributes(request, ErrorAttributeOptions.defaults())
         return ServerResponse
             .status(status)
