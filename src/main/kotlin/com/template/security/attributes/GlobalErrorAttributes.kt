@@ -1,5 +1,6 @@
 package com.template.security.attributes
 
+import com.template.common.exception.ApiException
 import org.springframework.boot.web.error.ErrorAttributeOptions
 import org.springframework.boot.web.reactive.error.DefaultErrorAttributes
 import org.springframework.http.HttpStatus
@@ -21,12 +22,19 @@ class GlobalErrorAttributes : DefaultErrorAttributes() {
 
     private fun fillErrorAttributes(request: ServerRequest, throwable: Throwable, map: MutableMap<String, Any>) {
         fillCommonAttributes(request, throwable, map)
-        if (throwable is ResponseStatusException) {
-            map["status"] = throwable.status.value()
-            map["error"] = throwable.message
-        } else {
-            map["status"] = HttpStatus.INTERNAL_SERVER_ERROR.value()
-            map["error"] = HttpStatus.INTERNAL_SERVER_ERROR.reasonPhrase
+        when(throwable) {
+            is ResponseStatusException -> {
+                map["status"] = throwable.status.value()
+                map["error"] = throwable.message
+            }
+            is ApiException -> {
+                map["status"] = throwable.status.value()
+                map["error"] = throwable.message
+            }
+            else -> {
+                map["status"] = HttpStatus.INTERNAL_SERVER_ERROR.value()
+                map["error"] = HttpStatus.INTERNAL_SERVER_ERROR.reasonPhrase
+            }
         }
     }
 
