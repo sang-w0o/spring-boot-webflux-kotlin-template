@@ -11,7 +11,6 @@ class JwtAuthenticationManager(
     private val jwtTokenUtil: JwtTokenUtil
 ) : ReactiveAuthenticationManager {
     override fun authenticate(authentication: Authentication): Mono<Authentication> {
-        println("Managing..")
         return Mono.just(authentication)
             .flatMap { jwtTokenUtil.getAuthentication(it) }
     }

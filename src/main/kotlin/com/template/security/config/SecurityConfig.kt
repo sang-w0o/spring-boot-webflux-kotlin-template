@@ -19,7 +19,6 @@ class SecurityConfig(
 ) {
     @Bean
     fun securityWebFilterChain(http: ServerHttpSecurity): SecurityWebFilterChain {
-        println("securing..")
         val jwtAuthenticationWebFilter = AuthenticationWebFilter(jwtAuthenticationManager)
         jwtAuthenticationWebFilter.setServerAuthenticationConverter(jwtAuthenticationConverter)
         return http {
