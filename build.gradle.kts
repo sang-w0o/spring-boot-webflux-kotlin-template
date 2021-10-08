@@ -60,6 +60,10 @@ tasks.withType<KotlinCompile> {
     }
 }
 
+configure<org.jlleitschuh.gradle.ktlint.KtlintExtension> {
+    disabledRules.set(setOf("no-wildcard-imports"))
+}
+
 tasks.withType<Test> {
     useJUnitPlatform()
 }
