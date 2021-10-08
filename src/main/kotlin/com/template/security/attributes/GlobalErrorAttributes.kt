@@ -22,7 +22,7 @@ class GlobalErrorAttributes : DefaultErrorAttributes() {
 
     private fun fillErrorAttributes(request: ServerRequest, throwable: Throwable, map: MutableMap<String, Any>) {
         fillCommonAttributes(request, throwable, map)
-        when(throwable) {
+        when (throwable) {
             is ResponseStatusException -> {
                 map["status"] = throwable.status.value()
                 map["error"] = throwable.message

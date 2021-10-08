@@ -51,6 +51,7 @@ dependencies {
     testImplementation("org.junit.platform:junit-platform-launcher:1.8.0")
     testImplementation("com.h2database:h2")
     testImplementation("io.r2dbc:r2dbc-h2")
+    testImplementation(kotlin("test-junit"))
 }
 
 tasks.withType<KotlinCompile> {
