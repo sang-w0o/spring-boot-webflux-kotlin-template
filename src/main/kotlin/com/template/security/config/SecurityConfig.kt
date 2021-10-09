@@ -28,6 +28,9 @@ class SecurityConfig(
             securityMatcher(
                 NegatedServerWebExchangeMatcher(ServerWebExchangeMatchers.pathMatchers(HttpMethod.GET, "/actuator/**"))
             )
+            securityMatcher(
+                NegatedServerWebExchangeMatcher(ServerWebExchangeMatchers.pathMatchers(HttpMethod.POST, "/v1/user"))
+            )
             authorizeExchange { authorize(anyExchange, permitAll) }
             httpBasic { disable() }
             formLogin { disable() }

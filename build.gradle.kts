@@ -30,6 +30,7 @@ buildscript {
 }
 
 dependencies {
+    runtimeOnly("io.netty:netty-resolver-dns-native-macos:4.1.68.Final:osx-aarch_64")
     implementation("org.springframework.boot:spring-boot-starter-data-r2dbc")
     implementation("org.springframework.boot:spring-boot-starter-webflux")
     implementation("org.springframework.boot:spring-boot-starter-security")
@@ -43,6 +44,7 @@ dependencies {
     implementation("io.jsonwebtoken:jjwt:0.9.1")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
     implementation("dev.miku:r2dbc-mysql:0.8.2.RELEASE")
+    implementation("io.r2dbc:r2dbc-pool")
     implementation("org.hibernate:hibernate-core:5.5.7.Final")
     implementation("javax.validation:validation-api:2.0.1.Final")
     testImplementation("org.springframework.boot:spring-boot-starter-test") {

@@ -1,4 +1,4 @@
-package com.template.domain
+package com.template.user.domain
 
 import org.springframework.data.annotation.Id
 import org.springframework.data.relational.core.mapping.Column
