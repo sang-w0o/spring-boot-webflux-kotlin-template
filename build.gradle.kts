@@ -44,6 +44,7 @@ dependencies {
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
     implementation("dev.miku:r2dbc-mysql:0.8.2.RELEASE")
     implementation("org.hibernate:hibernate-core:5.5.7.Final")
+    implementation("javax.validation:validation-api:2.0.1.Final")
     testImplementation("org.springframework.boot:spring-boot-starter-test") {
     }
     testImplementation("io.projectreactor:reactor-test")
