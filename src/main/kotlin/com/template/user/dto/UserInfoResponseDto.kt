@@ -3,7 +3,7 @@ package com.template.user.dto
 import com.template.user.domain.User
 
 data class UserInfoResponseDto(
-    val id: Int,
+    val id: String,
     val name: String,
     val email: String
 ) {

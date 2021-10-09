@@ -7,7 +7,6 @@ plugins {
     id("org.jlleitschuh.gradle.ktlint") version "10.2.0"
     kotlin("jvm") version kotlinVersion
     kotlin("plugin.spring") version kotlinVersion
-    kotlin("plugin.jpa") version kotlinVersion
     kotlin("plugin.allopen") version kotlinVersion
     kotlin("plugin.noarg") version kotlinVersion
 }
@@ -31,7 +30,7 @@ buildscript {
 
 dependencies {
     runtimeOnly("io.netty:netty-resolver-dns-native-macos:4.1.68.Final:osx-aarch_64")
-    implementation("org.springframework.boot:spring-boot-starter-data-r2dbc")
+    implementation("org.springframework.boot:spring-boot-starter-data-mongodb-reactive")
     implementation("org.springframework.boot:spring-boot-starter-webflux")
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
@@ -43,17 +42,14 @@ dependencies {
     implementation("io.projectreactor.tools:blockhound:1.0.6.RELEASE")
     implementation("io.jsonwebtoken:jjwt:0.9.1")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
-    implementation("dev.miku:r2dbc-mysql:0.8.2.RELEASE")
-    implementation("io.r2dbc:r2dbc-pool")
-    implementation("org.hibernate:hibernate-core:5.5.7.Final")
     implementation("javax.validation:validation-api:2.0.1.Final")
     testImplementation("org.springframework.boot:spring-boot-starter-test") {
     }
+    testImplementation("de.flapdoodle.embed:de.flapdoodle.embed.mongo")
+//    implementation("org.mongodb:mongodb-driver-sync")
     testImplementation("io.projectreactor:reactor-test")
     testImplementation("io.projectreactor.tools:blockhound-junit-platform:1.0.6.RELEASE")
     testImplementation("org.junit.platform:junit-platform-launcher:1.8.0")
-    testImplementation("com.h2database:h2")
-    testImplementation("io.r2dbc:r2dbc-h2")
     testImplementation(kotlin("test-junit"))
 }
 

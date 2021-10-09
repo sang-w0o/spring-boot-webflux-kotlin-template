@@ -1,12 +1,14 @@
 spring:
   r2dbc:
-    url: r2dbc:pool:h2:mem:test
+    url: r2dbc:h2:mem:///testdb
     pool:
       initial-size: 100
       max-size: 500
       max-idle-time: 30m
       validation-query: SELECT 1
       enabled: true
+  datasource:
+    driver-class-name: org.h2.Driver
 
 jwt:
   secret: TestJwtSecretKey
