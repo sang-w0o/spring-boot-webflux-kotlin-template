@@ -18,7 +18,7 @@ class UserApiController(
 ) {
 
     @PostMapping
-    fun createUser(@Valid @RequestBody requestDto: Mono<UserCreateRequestDto>): Mono<ResponseEntity<UserInfoResponseDto>> {
+    fun createUser(@RequestBody @Valid requestDto: Mono<UserCreateRequestDto>): Mono<ResponseEntity<UserInfoResponseDto>> {
         return userService.create(requestDto)
     }
 }

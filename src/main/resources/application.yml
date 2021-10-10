@@ -1,4 +1,6 @@
 spring:
+  profiles:
+    active: development
   data:
     mongodb:
       host: localhost

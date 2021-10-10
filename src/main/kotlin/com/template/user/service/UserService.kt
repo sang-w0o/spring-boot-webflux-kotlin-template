@@ -6,7 +6,6 @@ import com.template.user.dto.UserCreateRequestDto
 import com.template.user.dto.UserInfoResponseDto
 import com.template.user.exception.UserEmailConflictException
 import org.springframework.http.ResponseEntity
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
 import reactor.core.publisher.Mono
 import java.net.URI
@@ -14,23 +13,24 @@ import java.net.URI
 @Service
 class UserService(
     private val userRepository: UserRepository,
-    private val passwordEncoder: BCryptPasswordEncoder
 ) {
 
     fun create(requestDto: Mono<UserCreateRequestDto>): Mono<ResponseEntity<UserInfoResponseDto>> {
         return requestDto
-            .flatMap { dto ->
-                userRepository.existsByEmail(dto.email)
+            .flatMap {
+                userRepository.existsByEmail(it.email)
                     .filter { result -> result == false }
-                    .switchIfEmpty(Mono.error(UserEmailConflictException("Duplicate email(${dto.email})")))
-                    .thenReturn(dto)
+                    .switchIfEmpty(Mono.error(UserEmailConflictException("Duplicate email(${it.email})")))
+                    .thenReturn(it)
             }
             .flatMap {
-                result ->
-                userRepository.save(User(result.name, result.email, passwordEncoder.encode(result.password)))
+                userRepository.save(User(it.name, it.email, it.password))
             }
             .map {
-                ResponseEntity.created(URI.create("/v1/user")).body(UserInfoResponseDto(it))
+                UserInfoResponseDto(it)
+            }
+            .map {
+                ResponseEntity.created(URI.create("/v1/user")).body(it)
             }
     }
 }
