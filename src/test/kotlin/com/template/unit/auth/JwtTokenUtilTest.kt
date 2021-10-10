@@ -16,22 +16,11 @@ import kotlin.test.assertFailsWith
 
 class JwtTokenUtilTest : BaseUnitTest() {
     companion object {
-        const val USER_ID = 1
+        const val USER_ID = "userId"
         const val EXTRA_TIME = 2000000
-        const val SECRET_KEY = "SecretKey"
-        const val ACCESS_TOKEN_EXP = 86400000
-        const val REFRESH_TOKEN_EXP = 86400000 * 7
     }
 
-    private val jwtProperties = JwtProperties()
     private val jwtTokenUtil = JwtTokenUtil(jwtProperties)
-
-    @BeforeEach
-    fun setUp() {
-        jwtProperties.secret = SECRET_KEY
-        jwtProperties.accessTokenExp = ACCESS_TOKEN_EXP
-        jwtProperties.refreshTokenExp = REFRESH_TOKEN_EXP
-    }
 
     @DisplayName("RefreshToken 생성")
     @Test

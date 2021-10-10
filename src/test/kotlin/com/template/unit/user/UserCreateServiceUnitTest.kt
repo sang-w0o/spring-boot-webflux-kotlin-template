@@ -1,5 +1,6 @@
 package com.template.unit.user
 
+import com.template.security.tools.JwtTokenUtil
 import com.template.unit.BaseUnitTest
 import com.template.user.domain.User
 import com.template.user.domain.UserRepository
@@ -13,6 +14,7 @@ import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mockito.`when`
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.http.HttpStatus
 import reactor.core.publisher.Mono
@@ -29,9 +31,11 @@ class UserCreateServiceUnitTest : BaseUnitTest() {
 
     private lateinit var userService: UserService
 
+    private val jwtTokenUtil = JwtTokenUtil(jwtProperties)
+
     @BeforeEach
     fun setUp() {
-        userService = UserService(userRepository)
+        userService = UserService(userRepository, jwtTokenUtil)
     }
 
     @DisplayName("Success")
