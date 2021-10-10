@@ -1,7 +1,6 @@
 package com.template.security.config
 
 import org.springframework.context.annotation.Bean
-import org.springframework.http.HttpMethod
 import org.springframework.security.authentication.ReactiveAuthenticationManager
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity
 import org.springframework.security.config.web.server.SecurityWebFiltersOrder
@@ -26,10 +25,7 @@ class SecurityConfig(
         jwtAuthenticationWebFilter.setServerAuthenticationConverter(jwtAuthenticationConverter)
         return http {
             securityMatcher(
-                NegatedServerWebExchangeMatcher(ServerWebExchangeMatchers.pathMatchers(HttpMethod.GET, "/actuator/**"))
-            )
-            securityMatcher(
-                NegatedServerWebExchangeMatcher(ServerWebExchangeMatchers.pathMatchers(HttpMethod.POST, "/v1/user"))
+                NegatedServerWebExchangeMatcher(ServerWebExchangeMatchers.pathMatchers("/actuator/**", "/v1/user"))
             )
             authorizeExchange { authorize(anyExchange, permitAll) }
             httpBasic { disable() }

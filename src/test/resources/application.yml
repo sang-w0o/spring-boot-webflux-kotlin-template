@@ -2,3 +2,16 @@ jwt:
   secret: TestJwtSecretKey
   accessTokenExp: 86400000
   refreshTokenExp: 604800000
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "health, info"
+
+info:
+  application:
+    author: Sangwoo Ra(robbyra@gmail.com)
+    version: 0.0.0
+    description: Template repository for building Spring Boot(Webflux) Applications using Kotlin
+    more_info: https://github.com/sang-w0o/spring-boot-webflux-kotlin-template

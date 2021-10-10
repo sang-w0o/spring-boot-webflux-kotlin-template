@@ -10,4 +10,10 @@ import org.springframework.test.context.junit.jupiter.SpringExtension
 @ExtendWith(SpringExtension::class)
 @EnableConfigurationProperties(JwtProperties::class)
 @ContextConfiguration(initializers = [ConfigDataApplicationContextInitializer::class])
-abstract class BaseUnitTest
+abstract class BaseUnitTest {
+    companion object {
+        const val NAME = "userName"
+        const val EMAIL = "email@test.com"
+        const val PASSWORD = "testPassword"
+    }
+}
