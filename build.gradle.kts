@@ -34,6 +34,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-webflux")
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
+    implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("io.projectreactor.kotlin:reactor-kotlin-extensions")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
@@ -42,11 +43,9 @@ dependencies {
     implementation("io.projectreactor.tools:blockhound:1.0.6.RELEASE")
     implementation("io.jsonwebtoken:jjwt:0.9.1")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
-    implementation("javax.validation:validation-api:2.0.1.Final")
     testImplementation("org.springframework.boot:spring-boot-starter-test") {
     }
     testImplementation("de.flapdoodle.embed:de.flapdoodle.embed.mongo")
-//    implementation("org.mongodb:mongodb-driver-sync")
     testImplementation("io.projectreactor:reactor-test")
     testImplementation("io.projectreactor.tools:blockhound-junit-platform:1.0.6.RELEASE")
     testImplementation("org.junit.platform:junit-platform-launcher:1.8.0")
@@ -66,10 +65,4 @@ configure<org.jlleitschuh.gradle.ktlint.KtlintExtension> {
 
 tasks.withType<Test> {
     useJUnitPlatform()
-}
-
-allOpen {
-    annotation("javax.persistence.Entity")
-    annotation("javax.persistence.Embeddable")
-    annotation("javax.persistence.MappedSuperclass")
 }
