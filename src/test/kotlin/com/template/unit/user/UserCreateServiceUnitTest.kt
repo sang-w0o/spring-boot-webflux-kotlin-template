@@ -2,7 +2,6 @@ package com.template.unit.user
 
 import com.template.security.tools.JwtTokenUtil
 import com.template.unit.BaseUnitTest
-import com.template.user.domain.User
 import com.template.user.domain.UserRepository
 import com.template.user.dto.UserCreateRequestDto
 import com.template.user.exception.UserEmailConflictException
@@ -14,7 +13,6 @@ import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mockito.`when`
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.http.HttpStatus
 import reactor.core.publisher.Mono
@@ -41,9 +39,7 @@ class UserCreateServiceUnitTest : BaseUnitTest() {
     @DisplayName("Success")
     @Test
     fun success() {
-        val savedUser = User(NAME, EMAIL, PASSWORD)
-        savedUser.id = "generatedId"
-        `when`(userRepository.save(any())).thenReturn(Mono.just(savedUser))
+        `when`(userRepository.save(any())).thenReturn(Mono.just(getMockUser()))
         `when`(userRepository.existsByEmail(anyString())).thenReturn(Mono.just(false))
         val requestDto = UserCreateRequestDto(NAME, PASSWORD, EMAIL)
         userService.create(Mono.just(requestDto))

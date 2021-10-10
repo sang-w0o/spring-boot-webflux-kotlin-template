@@ -1,14 +1,12 @@
 package com.template.unit.auth
 
 import com.template.security.exception.AuthenticateException
-import com.template.security.tools.JwtProperties
 import com.template.security.tools.JwtTokenUtil
 import com.template.unit.BaseUnitTest
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import java.util.*
@@ -20,7 +18,7 @@ class JwtTokenUtilTest : BaseUnitTest() {
         const val EXTRA_TIME = 2000000
     }
 
-    private val jwtTokenUtil = JwtTokenUtil(jwtProperties)
+    private val jwtTokenUtil: JwtTokenUtil = JwtTokenUtil(jwtProperties)
 
     @DisplayName("RefreshToken 생성")
     @Test

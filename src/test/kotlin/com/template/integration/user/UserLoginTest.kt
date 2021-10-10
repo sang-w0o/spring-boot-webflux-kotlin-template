@@ -2,7 +2,6 @@ package com.template.integration.user
 
 import com.template.integration.ApiIntegrationTest
 import com.template.user.domain.User
-import com.template.user.dto.UserCreateRequestDto
 import com.template.user.dto.UserLoginRequestDto
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
@@ -32,7 +31,7 @@ class UserLoginTest : ApiIntegrationTest() {
             .header("Accept", MediaType.APPLICATION_JSON_VALUE)
             .bodyValue(requestDto)
             .exchange()
-            .expectStatus().isCreated
+            .expectStatus().isOk
             .expectHeader().contentType(MediaType.APPLICATION_JSON)
             .expectBody()
             .jsonPath("accessToken").isNotEmpty
@@ -91,7 +90,6 @@ class UserLoginTest : ApiIntegrationTest() {
             .jsonPath("remote").isNotEmpty
             .jsonPath("path").isEqualTo(API_PATH)
             .jsonPath("status").isEqualTo(HttpStatus.BAD_REQUEST.value())
-
     }
 
     @DisplayName("Fail - Wrong email format")
