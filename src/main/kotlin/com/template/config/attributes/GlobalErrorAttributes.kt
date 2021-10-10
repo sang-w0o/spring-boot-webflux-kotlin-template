@@ -1,4 +1,4 @@
-package com.template.security.attributes
+package com.template.config.attributes
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.web.error.ErrorAttributeOptions

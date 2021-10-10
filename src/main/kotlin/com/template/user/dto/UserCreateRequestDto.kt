@@ -2,6 +2,7 @@ package com.template.user.dto
 
 import javax.validation.constraints.Email
 import javax.validation.constraints.NotBlank
+import javax.validation.constraints.NotNull
 
 data class UserCreateRequestDto(
     @field:NotBlank(message = "name is required.")
@@ -10,7 +11,7 @@ data class UserCreateRequestDto(
     @field:NotBlank(message = "password is required")
     val password: String,
 
-    @field:Email
-    @field:NotBlank(message = "email is required.")
+    @field:Email(message = "wrong email format.")
+    @field:NotNull(message = "email is required.")
     val email: String
 )
