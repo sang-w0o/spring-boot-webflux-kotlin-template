@@ -1,14 +1,12 @@
 package com.template.unit.auth
 
 import com.template.security.exception.AuthenticateException
-import com.template.security.tools.JwtProperties
 import com.template.security.tools.JwtTokenUtil
 import com.template.unit.BaseUnitTest
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import java.util.*
@@ -16,22 +14,11 @@ import kotlin.test.assertFailsWith
 
 class JwtTokenUtilTest : BaseUnitTest() {
     companion object {
-        const val USER_ID = 1
+        const val USER_ID = "userId"
         const val EXTRA_TIME = 2000000
-        const val SECRET_KEY = "SecretKey"
-        const val ACCESS_TOKEN_EXP = 86400000
-        const val REFRESH_TOKEN_EXP = 86400000 * 7
     }
 
-    private val jwtProperties = JwtProperties()
-    private val jwtTokenUtil = JwtTokenUtil(jwtProperties)
-
-    @BeforeEach
-    fun setUp() {
-        jwtProperties.secret = SECRET_KEY
-        jwtProperties.accessTokenExp = ACCESS_TOKEN_EXP
-        jwtProperties.refreshTokenExp = REFRESH_TOKEN_EXP
-    }
+    private val jwtTokenUtil: JwtTokenUtil = JwtTokenUtil(jwtProperties)
 
     @DisplayName("RefreshToken 생성")
     @Test

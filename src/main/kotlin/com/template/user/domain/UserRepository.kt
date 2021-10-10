@@ -6,6 +6,6 @@ import reactor.core.publisher.Mono
 
 @Repository
 interface UserRepository : ReactiveCrudRepository<User, Int> {
-    fun findByEmail(email: String): Mono<User>?
     fun existsByEmail(email: String): Mono<Boolean>
+    fun findByEmailAndPassword(email: String, password: String): Mono<User>
 }

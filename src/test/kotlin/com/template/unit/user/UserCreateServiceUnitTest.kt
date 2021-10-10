@@ -1,7 +1,7 @@
 package com.template.unit.user
 
+import com.template.security.tools.JwtTokenUtil
 import com.template.unit.BaseUnitTest
-import com.template.user.domain.User
 import com.template.user.domain.UserRepository
 import com.template.user.dto.UserCreateRequestDto
 import com.template.user.exception.UserEmailConflictException
@@ -29,17 +29,17 @@ class UserCreateServiceUnitTest : BaseUnitTest() {
 
     private lateinit var userService: UserService
 
+    private val jwtTokenUtil = JwtTokenUtil(jwtProperties)
+
     @BeforeEach
     fun setUp() {
-        userService = UserService(userRepository)
+        userService = UserService(userRepository, jwtTokenUtil)
     }
 
     @DisplayName("Success")
     @Test
     fun success() {
-        val savedUser = User(NAME, EMAIL, PASSWORD)
-        savedUser.id = "generatedId"
-        `when`(userRepository.save(any())).thenReturn(Mono.just(savedUser))
+        `when`(userRepository.save(any())).thenReturn(Mono.just(getMockUser()))
         `when`(userRepository.existsByEmail(anyString())).thenReturn(Mono.just(false))
         val requestDto = UserCreateRequestDto(NAME, PASSWORD, EMAIL)
         userService.create(Mono.just(requestDto))

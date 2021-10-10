@@ -40,14 +40,14 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
-    implementation("io.projectreactor.tools:blockhound:1.0.6.RELEASE")
+//    implementation("io.projectreactor.tools:blockhound:1.0.6.RELEASE")
     implementation("io.jsonwebtoken:jjwt:0.9.1")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
     testImplementation("org.springframework.boot:spring-boot-starter-test") {
     }
     testImplementation("de.flapdoodle.embed:de.flapdoodle.embed.mongo")
     testImplementation("io.projectreactor:reactor-test")
-    testImplementation("io.projectreactor.tools:blockhound-junit-platform:1.0.6.RELEASE")
+//    testImplementation("io.projectreactor.tools:blockhound-junit-platform:1.0.6.RELEASE")
     testImplementation("org.junit.platform:junit-platform-launcher:1.8.0")
     testImplementation(kotlin("test-junit"))
 }

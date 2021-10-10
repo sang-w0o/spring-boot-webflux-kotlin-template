@@ -16,9 +16,9 @@ import java.util.function.Function
 
 @Component
 class JwtTokenUtil(private val jwtProperties: JwtProperties) {
-    private fun getUserId(claim: Claims): Int {
+    private fun getUserId(claim: Claims): String {
         try {
-            return claim.get("userId", Int::class.javaObjectType)
+            return claim.get("userId", String::class.javaObjectType)
         } catch (e: Exception) {
             throw AuthenticateException("JWT Claim에 userId가 없습니다.")
         }
@@ -57,7 +57,7 @@ class JwtTokenUtil(private val jwtProperties: JwtProperties) {
         return claimResolver.apply(extractAllClaims(token))
     }
 
-    fun extractUserId(token: String): Int {
+    fun extractUserId(token: String): String {
         return extractClaim(token, this::getUserId)
     }
 
@@ -69,13 +69,13 @@ class JwtTokenUtil(private val jwtProperties: JwtProperties) {
         extractAllClaims(token)
     }
 
-    fun generateAccessToken(userId: Int): String {
+    fun generateAccessToken(userId: String): String {
         val claims: MutableMap<String, Any> = mutableMapOf()
         claims["userId"] = userId
         return createToken(claims, jwtProperties.accessTokenExp)
     }
 
-    fun generateRefreshToken(userId: Int): String {
+    fun generateRefreshToken(userId: String): String {
         val claims: MutableMap<String, Any> = mutableMapOf()
         claims["userId"] = userId
         return createToken(claims, jwtProperties.refreshTokenExp)
