@@ -2,6 +2,8 @@ package com.template.user.controller
 
 import com.template.user.dto.UserCreateRequestDto
 import com.template.user.dto.UserInfoResponseDto
+import com.template.user.dto.UserLoginRequestDto
+import com.template.user.dto.UserLoginResponseDto
 import com.template.user.service.UserService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
@@ -20,5 +22,10 @@ class UserApiController(
     @PostMapping
     fun createUser(@RequestBody @Valid requestDto: Mono<UserCreateRequestDto>): Mono<ResponseEntity<UserInfoResponseDto>> {
         return userService.create(requestDto)
+    }
+
+    @PostMapping("/login")
+    fun login(@RequestBody @Valid requestDto: Mono<UserLoginRequestDto>): Mono<ResponseEntity<UserLoginResponseDto>> {
+        return userService.login(requestDto)
     }
 }
