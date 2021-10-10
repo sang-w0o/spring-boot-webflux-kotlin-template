@@ -1,5 +1,7 @@
 package com.template.integration
 
+import com.template.user.domain.UserRepository
+import org.junit.jupiter.api.AfterEach
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
 import org.springframework.boot.test.context.SpringBootTest
@@ -13,4 +15,18 @@ abstract class ApiIntegrationTest {
 
     @Autowired
     protected lateinit var client: WebTestClient
+
+    @Autowired
+    protected lateinit var userRepository: UserRepository
+
+    @AfterEach
+    fun tearDown() {
+        userRepository.deleteAll().block()
+    }
+
+    companion object {
+        const val NAME = "userName"
+        const val EMAIL = "email@test.com"
+        const val PASSWORD = "testPassword"
+    }
 }

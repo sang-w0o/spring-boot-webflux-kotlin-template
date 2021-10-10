@@ -1,14 +1,13 @@
 spring:
-  r2dbc:
-    url: ${DATASOURCE_URL}
-    username: ${DATASOURCE_USERNAME}
-    password: ${DATASOURCE_PASSWORD}
-    pool:
-      initial-size: 100
-      max-size: 500
-      max-idle-time: 30m
-      validation-query: SELECT 1
-      enabled: true
+  profiles:
+    active: development
+  data:
+    mongodb:
+      host: localhost
+      username: sangwoo
+      password: sangwoo
+      port: 27017
+      database: template
 
 management:
   endpoints:

@@ -1,6 +1,6 @@
-package com.template.config
+package com.template.config.handler
 
-import com.template.security.attributes.GlobalErrorAttributes
+import com.template.config.attributes.GlobalErrorAttributes
 import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.web.WebProperties
 import org.springframework.boot.autoconfigure.web.reactive.error.AbstractErrorWebExceptionHandler
@@ -22,7 +22,7 @@ import reactor.core.publisher.Mono
 class GlobalExceptionHandler(
     errorAttributes: GlobalErrorAttributes,
     applicationContext: ApplicationContext,
-    configurer: ServerCodecConfigurer
+    configurer: ServerCodecConfigurer,
 ) : AbstractErrorWebExceptionHandler(
     errorAttributes, WebProperties.Resources(), applicationContext
 ) {
@@ -37,6 +37,7 @@ class GlobalExceptionHandler(
     }
 
     private fun createErrorResponse(request: ServerRequest): Mono<ServerResponse> {
+
         val throwable = getError(request)
         var status = HttpStatus.INTERNAL_SERVER_ERROR
         when (throwable) {
