@@ -18,7 +18,7 @@ class UserApiController(
     private val userService: UserService
 ) {
 
-    @PostMapping
+    @PostMapping("/signup")
     fun createUser(@RequestBody @Valid requestDto: Mono<UserCreateRequestDto>): Mono<ResponseEntity<UserInfoResponseDto>> {
         return userService.create(requestDto)
     }
@@ -28,7 +28,7 @@ class UserApiController(
         return userService.login(requestDto)
     }
 
-    @GetMapping
+    @GetMapping("/info")
     fun getUserInfo(@LoggedInUser user: User): Mono<ResponseEntity<UserInfoResponseDto>> {
         return userService.getInfo(Mono.just(user))
     }
