@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 
-@Tag("[POST]v1/user")
+@Tag("[POST]v1/user/signup")
 class UserCreateTest : ApiIntegrationTest() {
 
     companion object {
