@@ -1,6 +1,7 @@
 package com.template.security.tools
 
 import com.template.security.exception.AuthenticateException
+import com.template.user.domain.UserRepository
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.ExpiredJwtException
 import io.jsonwebtoken.Jwts
@@ -8,14 +9,19 @@ import io.jsonwebtoken.MalformedJwtException
 import io.jsonwebtoken.SignatureAlgorithm
 import io.jsonwebtoken.SignatureException
 import io.jsonwebtoken.UnsupportedJwtException
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Component
 import reactor.core.publisher.Mono
+import reactor.kotlin.core.publisher.switchIfEmpty
 import java.util.Date
 import java.util.function.Function
 
 @Component
-class JwtTokenUtil(private val jwtProperties: JwtProperties) {
+class JwtTokenUtil(
+    private val jwtProperties: JwtProperties,
+    private val userRepository: UserRepository
+) {
     private fun getUserId(claim: Claims): String {
         try {
             return claim.get("userId", String::class.javaObjectType)
@@ -65,8 +71,14 @@ class JwtTokenUtil(private val jwtProperties: JwtProperties) {
         return extractExp(token).before(Date())
     }
 
-    fun verify(token: String) {
+    private fun verify(token: String): Mono<Authentication> {
         extractAllClaims(token)
+        val userId = extractUserId(token)
+        return userRepository.findById(userId)
+            .switchIfEmpty(Mono.error(AuthenticateException("AA")))
+            .map {
+                UsernamePasswordAuthenticationToken(it, "", mutableListOf())
+            }
     }
 
     fun generateAccessToken(userId: String): String {
@@ -82,8 +94,12 @@ class JwtTokenUtil(private val jwtProperties: JwtProperties) {
     }
 
     fun getAuthentication(authentication: Authentication): Mono<Authentication> {
-        val token = authentication.credentials.toString()
-        verify(token)
         return Mono.just(authentication)
+            .flatMap { auth ->
+                verify(auth.principal.toString())
+                    .map {
+                        it
+                    }
+            }
     }
 }
