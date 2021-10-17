@@ -71,11 +71,11 @@ class JwtTokenUtil(
         return extractExp(token).before(Date())
     }
 
-    private fun verify(token: String): Mono<Authentication> {
+    fun verify(token: String): Mono<Authentication> {
         extractAllClaims(token)
         val userId = extractUserId(token)
         return userRepository.findById(userId)
-            .switchIfEmpty(Mono.error(AuthenticateException("AA")))
+            .switchIfEmpty(Mono.error(AuthenticateException("Invalid userId")))
             .map {
                 UsernamePasswordAuthenticationToken(it, "", mutableListOf())
             }
