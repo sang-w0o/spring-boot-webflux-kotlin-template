@@ -42,89 +42,69 @@ class UserLoginTest : ApiIntegrationTest() {
     @Test
     fun failWithWrongEmail() {
         val requestDto = UserLoginRequestDto("wrong@email.com", PASSWORD)
-        client.post().uri(API_PATH)
+        val body = client.post().uri(API_PATH)
             .header("Accept", MediaType.APPLICATION_JSON_VALUE)
             .bodyValue(requestDto)
             .exchange()
             .expectStatus().isNotFound
             .expectHeader().contentType(MediaType.APPLICATION_JSON)
             .expectBody()
-            .jsonPath("timestamp").isNotEmpty
-            .jsonPath("message").isEqualTo(ERROR_MESSAGE)
-            .jsonPath("remote").isNotEmpty
-            .jsonPath("path").isEqualTo(API_PATH)
-            .jsonPath("status").isEqualTo(HttpStatus.NOT_FOUND.value())
+        assertErrorResponse(body, API_PATH, ERROR_MESSAGE, HttpStatus.NOT_FOUND)
     }
 
     @DisplayName("Fail - Wrong password")
     @Test
     fun failWithWrongPassword() {
         val requestDto = UserLoginRequestDto(EMAIL, "wrongPassword")
-        client.post().uri(API_PATH)
+        val body = client.post().uri(API_PATH)
             .header("Accept", MediaType.APPLICATION_JSON_VALUE)
             .bodyValue(requestDto)
             .exchange()
             .expectStatus().isNotFound
             .expectHeader().contentType(MediaType.APPLICATION_JSON)
             .expectBody()
-            .jsonPath("timestamp").isNotEmpty
-            .jsonPath("message").isEqualTo(ERROR_MESSAGE)
-            .jsonPath("remote").isNotEmpty
-            .jsonPath("path").isEqualTo(API_PATH)
-            .jsonPath("status").isEqualTo(HttpStatus.NOT_FOUND.value())
+        assertErrorResponse(body, API_PATH, ERROR_MESSAGE, HttpStatus.NOT_FOUND)
     }
 
     @DisplayName("Fail - Empty email")
     @Test
     fun wailWithEmptyEmail() {
         val requestDto = UserLoginRequestDto("", PASSWORD)
-        client.post().uri(API_PATH)
+        val body = client.post().uri(API_PATH)
             .header("Accept", MediaType.APPLICATION_JSON_VALUE)
             .bodyValue(requestDto)
             .exchange()
             .expectStatus().isBadRequest
             .expectHeader().contentType(MediaType.APPLICATION_JSON)
             .expectBody()
-            .jsonPath("timestamp").isNotEmpty
-            .jsonPath("message").isEqualTo("email is required.")
-            .jsonPath("remote").isNotEmpty
-            .jsonPath("path").isEqualTo(API_PATH)
-            .jsonPath("status").isEqualTo(HttpStatus.BAD_REQUEST.value())
+        assertErrorResponse(body, API_PATH, "email is required.", HttpStatus.BAD_REQUEST)
     }
 
     @DisplayName("Fail - Wrong email format")
     @Test
     fun failWithWrongEmailFormat() {
         val requestDto = UserLoginRequestDto("wrongEmailFormat", PASSWORD)
-        client.post().uri(API_PATH)
+        val body = client.post().uri(API_PATH)
             .header("Accept", MediaType.APPLICATION_JSON_VALUE)
             .bodyValue(requestDto)
             .exchange()
             .expectStatus().isBadRequest
             .expectHeader().contentType(MediaType.APPLICATION_JSON)
             .expectBody()
-            .jsonPath("timestamp").isNotEmpty
-            .jsonPath("message").isEqualTo("wrong email format.")
-            .jsonPath("remote").isNotEmpty
-            .jsonPath("path").isEqualTo(API_PATH)
-            .jsonPath("status").isEqualTo(HttpStatus.BAD_REQUEST.value())
+        assertErrorResponse(body, API_PATH, "wrong email format.", HttpStatus.BAD_REQUEST)
     }
 
     @DisplayName("Fail - Empty password")
     @Test
     fun failWithEmptyPassword() {
         val requestDto = UserLoginRequestDto(EMAIL, " ")
-        client.post().uri(API_PATH)
+        val body = client.post().uri(API_PATH)
             .header("Accept", MediaType.APPLICATION_JSON_VALUE)
             .bodyValue(requestDto)
             .exchange()
             .expectStatus().isBadRequest
             .expectHeader().contentType(MediaType.APPLICATION_JSON)
             .expectBody()
-            .jsonPath("timestamp").isNotEmpty
-            .jsonPath("message").isEqualTo("password is required.")
-            .jsonPath("remote").isNotEmpty
-            .jsonPath("path").isEqualTo(API_PATH)
-            .jsonPath("status").isEqualTo(HttpStatus.BAD_REQUEST.value())
+        assertErrorResponse(body, API_PATH, "password is required.", HttpStatus.BAD_REQUEST)
     }
 }
