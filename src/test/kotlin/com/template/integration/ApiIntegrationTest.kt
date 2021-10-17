@@ -1,5 +1,6 @@
 package com.template.integration
 
+import com.template.user.domain.User
 import com.template.user.domain.UserRepository
 import org.junit.jupiter.api.AfterEach
 import org.springframework.beans.factory.annotation.Autowired
@@ -22,6 +23,10 @@ abstract class ApiIntegrationTest {
     @AfterEach
     fun tearDown() {
         userRepository.deleteAll().block()
+    }
+
+    protected fun generateUser(): User {
+        return userRepository.save(User(NAME, EMAIL, PASSWORD)).block()!!
     }
 
     companion object {

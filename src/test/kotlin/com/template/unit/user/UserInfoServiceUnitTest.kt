@@ -15,6 +15,5 @@ class UserInfoServiceUnitTest : BaseUnitTest() {
 
     @Test
     fun contextLoads() {
-
     }
 }
