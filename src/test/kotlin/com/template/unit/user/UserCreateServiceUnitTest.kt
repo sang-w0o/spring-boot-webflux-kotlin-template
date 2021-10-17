@@ -2,7 +2,6 @@ package com.template.unit.user
 
 import com.template.security.tools.JwtTokenUtil
 import com.template.unit.BaseUnitTest
-import com.template.user.domain.UserRepository
 import com.template.user.dto.UserCreateRequestDto
 import com.template.user.exception.UserEmailConflictException
 import com.template.user.service.UserService
@@ -13,7 +12,6 @@ import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mockito.`when`
-import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.http.HttpStatus
 import reactor.core.publisher.Mono
 import reactor.test.StepVerifier
@@ -24,15 +22,13 @@ import kotlin.test.assertTrue
 @Tag("UserService-create")
 class UserCreateServiceUnitTest : BaseUnitTest() {
 
-    @MockBean
-    private lateinit var userRepository: UserRepository
-
     private lateinit var userService: UserService
 
-    private val jwtTokenUtil = JwtTokenUtil(jwtProperties)
+    private lateinit var jwtTokenUtil: JwtTokenUtil
 
     @BeforeEach
     fun setUp() {
+        jwtTokenUtil = JwtTokenUtil(jwtProperties, userRepository)
         userService = UserService(userRepository, jwtTokenUtil)
     }
 

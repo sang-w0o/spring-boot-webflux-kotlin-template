@@ -2,9 +2,11 @@ package com.template.unit
 
 import com.template.security.tools.JwtProperties
 import com.template.user.domain.User
+import com.template.user.domain.UserRepository
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.test.context.ConfigDataApplicationContextInitializer
+import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.junit.jupiter.SpringExtension
 
@@ -21,6 +23,9 @@ abstract class BaseUnitTest {
         const val JWT_ACCESS_TOKEN_EXP = 86400000
         const val JWT_REFRESH_TOKEN_EXP = 604800000
     }
+
+    @MockBean
+    protected lateinit var userRepository: UserRepository
 
     protected var jwtProperties: JwtProperties = JwtProperties()
 

@@ -13,7 +13,7 @@ import org.springframework.http.MediaType
 class UserCreateTest : ApiIntegrationTest() {
 
     companion object {
-        const val API_PATH = "/v1/user"
+        const val API_PATH = "/v1/user/signup"
     }
 
     @DisplayName("Success")

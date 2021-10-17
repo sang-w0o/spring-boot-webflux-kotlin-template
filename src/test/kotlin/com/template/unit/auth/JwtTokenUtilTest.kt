@@ -7,6 +7,7 @@ import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import java.util.*
@@ -18,7 +19,12 @@ class JwtTokenUtilTest : BaseUnitTest() {
         const val EXTRA_TIME = 2000000
     }
 
-    private val jwtTokenUtil: JwtTokenUtil = JwtTokenUtil(jwtProperties)
+    private lateinit var jwtTokenUtil: JwtTokenUtil
+
+    @BeforeEach
+    fun setUp() {
+        jwtTokenUtil = JwtTokenUtil(jwtProperties, userRepository)
+    }
 
     @DisplayName("RefreshToken 생성")
     @Test
