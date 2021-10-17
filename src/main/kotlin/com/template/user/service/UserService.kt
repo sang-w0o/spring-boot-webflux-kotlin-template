@@ -56,4 +56,15 @@ class UserService(
                 ResponseEntity.ok().body(it)
             }
     }
+
+    @Transactional(readOnly = true)
+    fun getInfo(user: Mono<User>): Mono<ResponseEntity<UserInfoResponseDto>> {
+        return user
+            .map {
+                UserInfoResponseDto(it)
+            }
+            .map {
+                ResponseEntity.ok().body(it)
+            }
+    }
 }
