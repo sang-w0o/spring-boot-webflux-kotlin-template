@@ -13,7 +13,9 @@ class JwtServerAuthenticationConverter : ServerAuthenticationConverter {
     override fun convert(exchange: ServerWebExchange): Mono<Authentication> {
         return Mono.just(exchange)
             .flatMap { Mono.justOrEmpty(extractTokenFromHeader(it)) }
-            .map { UsernamePasswordAuthenticationToken(it, it) }
+            .map {
+                UsernamePasswordAuthenticationToken(it, "", mutableListOf())
+            }
     }
 
     private fun extractTokenFromHeader(exchange: ServerWebExchange): String {

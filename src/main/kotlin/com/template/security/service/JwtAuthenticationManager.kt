@@ -12,6 +12,10 @@ class JwtAuthenticationManager(
 ) : ReactiveAuthenticationManager {
     override fun authenticate(authentication: Authentication): Mono<Authentication> {
         return Mono.just(authentication)
-            .flatMap { jwtTokenUtil.getAuthentication(it) }
+            .flatMap { auth ->
+                jwtTokenUtil.getAuthentication(auth).map {
+                    it
+                }
+            }
     }
 }

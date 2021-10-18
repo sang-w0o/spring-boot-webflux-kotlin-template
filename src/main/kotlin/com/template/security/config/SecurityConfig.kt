@@ -25,7 +25,7 @@ class SecurityConfig(
         jwtAuthenticationWebFilter.setServerAuthenticationConverter(jwtAuthenticationConverter)
         return http {
             securityMatcher(
-                NegatedServerWebExchangeMatcher(ServerWebExchangeMatchers.pathMatchers("/actuator/**", "/v1/user", "/v1/user/login"))
+                NegatedServerWebExchangeMatcher(ServerWebExchangeMatchers.pathMatchers("/actuator/**", "/v1/user/signup", "/v1/user/login"))
             )
             authorizeExchange { authorize(anyExchange, permitAll) }
             httpBasic { disable() }

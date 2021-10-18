@@ -3,14 +3,21 @@ package com.template.unit.auth
 import com.template.security.exception.AuthenticateException
 import com.template.security.tools.JwtTokenUtil
 import com.template.unit.BaseUnitTest
+import com.template.user.domain.User
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
+import org.mockito.ArgumentMatchers.anyString
+import org.mockito.Mockito.`when`
+import reactor.core.publisher.Mono
+import reactor.test.StepVerifier
 import java.util.*
 import kotlin.test.assertFailsWith
+import kotlin.test.assertTrue
 
 class JwtTokenUtilTest : BaseUnitTest() {
     companion object {
@@ -18,7 +25,12 @@ class JwtTokenUtilTest : BaseUnitTest() {
         const val EXTRA_TIME = 2000000
     }
 
-    private val jwtTokenUtil: JwtTokenUtil = JwtTokenUtil(jwtProperties)
+    private lateinit var jwtTokenUtil: JwtTokenUtil
+
+    @BeforeEach
+    fun setUp() {
+        jwtTokenUtil = JwtTokenUtil(jwtProperties, userRepository)
+    }
 
     @DisplayName("RefreshToken 생성")
     @Test
@@ -70,6 +82,36 @@ class JwtTokenUtilTest : BaseUnitTest() {
             .compact()
         val exception = assertFailsWith<AuthenticateException> { jwtTokenUtil.extractUserId(wrongToken) }
         assertEquals("JWT Claim에 userId가 없습니다.", exception.message)
+    }
+
+    @DisplayName("정상적인 token일 경우 검증 성공")
+    @Test
+    fun correctTokenVerifyComplete() {
+        val user = getMockUser()
+        `when`(userRepository.findById(anyString())).thenReturn(Mono.just(user))
+        val accessToken = jwtTokenUtil.generateAccessToken(USER_ID)
+        jwtTokenUtil.verify(accessToken)
+            .`as`(StepVerifier::create)
+            .expectNextMatches {
+                assertTrue(it.principal is User)
+                assertEquals(it.principal, user)
+                true
+            }.verifyComplete()
+    }
+
+    @DisplayName("존재하지 않는 userId인 경우 검증 실패")
+    @Test
+    fun tokenWithInvalidUserId() {
+        `when`(userRepository.findById(anyString())).thenReturn(Mono.empty())
+        val accessToken = jwtTokenUtil.generateAccessToken(USER_ID)
+        jwtTokenUtil.verify(accessToken)
+            .`as`(StepVerifier::create)
+            .expectErrorMatches {
+                assertEquals("Invalid userId", it.message!!)
+                assertTrue(it is AuthenticateException)
+                true
+            }
+            .verify()
     }
 
     private fun generateExpiredToken(exp: Int): String {

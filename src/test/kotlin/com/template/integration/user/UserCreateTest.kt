@@ -9,11 +9,11 @@ import org.junit.jupiter.api.Test
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 
-@Tag("[POST]v1/user")
+@Tag("[POST]v1/user/signup")
 class UserCreateTest : ApiIntegrationTest() {
 
     companion object {
-        const val API_PATH = "/v1/user"
+        const val API_PATH = "/v1/user/signup"
     }
 
     @DisplayName("Success")
@@ -38,71 +38,55 @@ class UserCreateTest : ApiIntegrationTest() {
     fun failWithConflictingEmail() {
         userRepository.save(User(NAME, EMAIL, PASSWORD)).block()
         val requestDto = UserCreateRequestDto(NAME, PASSWORD, EMAIL)
-        client.post().uri(API_PATH)
+        val body = client.post().uri(API_PATH)
             .header("Accept", MediaType.APPLICATION_JSON_VALUE)
             .bodyValue(requestDto)
             .exchange()
             .expectStatus().isEqualTo(HttpStatus.CONFLICT)
             .expectHeader().contentType(MediaType.APPLICATION_JSON)
             .expectBody()
-            .jsonPath("timestamp").isNotEmpty
-            .jsonPath("message").isEqualTo("Duplicate email($EMAIL)")
-            .jsonPath("remote").isNotEmpty
-            .jsonPath("path").isEqualTo(API_PATH)
-            .jsonPath("status").isEqualTo(HttpStatus.CONFLICT.value())
+        assertErrorResponse(body, API_PATH, "Duplicate email($EMAIL)", HttpStatus.CONFLICT)
     }
 
     @DisplayName("Fail - empty name")
     @Test
     fun failWithEmptyName() {
         val requestDto = UserCreateRequestDto(" ", PASSWORD, EMAIL)
-        client.post().uri(API_PATH)
+        val body = client.post().uri(API_PATH)
             .header("Accept", MediaType.APPLICATION_JSON_VALUE)
             .bodyValue(requestDto)
             .exchange()
             .expectStatus().isBadRequest
             .expectHeader().contentType(MediaType.APPLICATION_JSON)
             .expectBody()
-            .jsonPath("timestamp").isNotEmpty
-            .jsonPath("message").isEqualTo("name is required.")
-            .jsonPath("remote").isNotEmpty
-            .jsonPath("path").isEqualTo(API_PATH)
-            .jsonPath("status").isEqualTo(HttpStatus.BAD_REQUEST.value())
+        assertErrorResponse(body, API_PATH, "name is required.", HttpStatus.BAD_REQUEST)
     }
 
     @DisplayName("Fail - empty email")
     @Test
     fun failWithEmptyEmail() {
         val requestDto = UserCreateRequestDto(NAME, PASSWORD, " ")
-        client.post().uri(API_PATH)
+        val body = client.post().uri(API_PATH)
             .header("Accept", MediaType.APPLICATION_JSON_VALUE)
             .bodyValue(requestDto)
             .exchange()
             .expectStatus().isBadRequest
             .expectHeader().contentType(MediaType.APPLICATION_JSON)
             .expectBody()
-            .jsonPath("timestamp").isNotEmpty
-            .jsonPath("message").isEqualTo("wrong email format.")
-            .jsonPath("remote").isNotEmpty
-            .jsonPath("path").isEqualTo(API_PATH)
-            .jsonPath("status").isEqualTo(HttpStatus.BAD_REQUEST.value())
+        assertErrorResponse(body, API_PATH, "wrong email format.", HttpStatus.BAD_REQUEST)
     }
 
     @DisplayName("Fail - Wrong email format")
     @Test
     fun failWithWrongEmailFormat() {
         val requestDto = UserCreateRequestDto(NAME, PASSWORD, "wrongEmailFormat")
-        client.post().uri(API_PATH)
+        val body = client.post().uri(API_PATH)
             .header("Accept", MediaType.APPLICATION_JSON_VALUE)
             .bodyValue(requestDto)
             .exchange()
             .expectStatus().isBadRequest
             .expectHeader().contentType(MediaType.APPLICATION_JSON)
             .expectBody()
-            .jsonPath("timestamp").isNotEmpty
-            .jsonPath("message").isEqualTo("wrong email format.")
-            .jsonPath("remote").isNotEmpty
-            .jsonPath("path").isEqualTo(API_PATH)
-            .jsonPath("status").isEqualTo(HttpStatus.BAD_REQUEST.value())
+        assertErrorResponse(body, API_PATH, "wrong email format.", HttpStatus.BAD_REQUEST)
     }
 }
