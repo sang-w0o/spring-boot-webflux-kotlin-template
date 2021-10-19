@@ -46,7 +46,7 @@ class JwtTokenUtil(
         } catch (signatureException: SignatureException) {
             throw AuthenticateException("Jwt Signature이 잘못된 값입니다.")
         } catch (illegalArgumentException: IllegalArgumentException) {
-            throw AuthenticateException("Jwt 헤더 값이 잘못되었습니다.")
+            throw AuthenticateException("Jwt 값이 잘못되었습니다.")
         }
     }
 
