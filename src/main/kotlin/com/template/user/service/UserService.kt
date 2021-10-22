@@ -69,11 +69,13 @@ class UserService(
     @Transactional(readOnly = true)
     fun updateAccessToken(dto: Mono<AccessTokenUpdateRequestDto>): Mono<ResponseEntity<AccessTokenUpdateResponseDto>> {
         return dto
-            .filter { !jwtTokenUtil.isTokenExpired(it.refreshToken) }
-            .switchIfEmpty(Mono.error(AuthenticateException("RefreshToken has been expired.")))
+            .flatMap {
+                userRepository.findById(jwtTokenUtil.extractUserId(it.refreshToken))
+                    .switchIfEmpty(Mono.error(AuthenticateException("Invalid userId.")))
+                    .single()
+            }
             .map {
-                val userId = jwtTokenUtil.extractUserId(it.refreshToken)
-                val accessToken = jwtTokenUtil.generateRefreshToken(userId)
+                val accessToken = jwtTokenUtil.generateRefreshToken(it.id!!)
                 val responseDto = AccessTokenUpdateResponseDto(accessToken)
                 ResponseEntity.ok().body(responseDto)
             }
