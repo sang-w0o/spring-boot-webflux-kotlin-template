@@ -6,6 +6,7 @@ import com.template.unit.BaseUnitTest
 import com.template.user.domain.User
 import com.template.user.dto.AccessTokenUpdateRequestDto
 import com.template.user.service.UserService
+import com.template.util.TestUtils
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.mockito.ArgumentMatchers.anyString
@@ -52,7 +53,7 @@ class UserAccessTokenUpdateServiceUnitTest : BaseUnitTest() {
     @DisplayName("Fail - Expired refreshToken")
     @Test
     fun failWithExpiredRefreshToken() {
-        val refreshToken = generateExpiredToken(JWT_REFRESH_TOKEN_EXP)
+        val refreshToken = TestUtils.generateExpiredToken(JWT_REFRESH_TOKEN_EXP, jwtProperties.secret)
         val requestDto = AccessTokenUpdateRequestDto(refreshToken)
         userService.updateAccessToken(Mono.just(requestDto))
             .`as`(StepVerifier::create)

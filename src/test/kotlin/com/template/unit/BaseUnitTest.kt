@@ -45,18 +45,6 @@ abstract class BaseUnitTest {
         return savedUser
     }
 
-    protected fun generateExpiredToken(exp: Int): String {
-        val realExp = EXTRA_TIME + exp
-        val claims: MutableMap<String, Any> = mutableMapOf()
-        claims["userId"] = USER_ID
-        return Jwts.builder()
-            .setClaims(claims)
-            .setIssuedAt(Date(System.currentTimeMillis() - realExp))
-            .setExpiration(Date(System.currentTimeMillis() - EXTRA_TIME))
-            .signWith(SignatureAlgorithm.HS256, jwtProperties.secret)
-            .compact()
-    }
-
     protected fun generateOtherSignatureToken(exp: Int): String {
         val claims: MutableMap<String, Any> = mutableMapOf()
         claims["userId"] = USER_ID
