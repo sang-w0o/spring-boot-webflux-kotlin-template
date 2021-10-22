@@ -1,7 +1,6 @@
 package com.template.unit
 
 import com.template.security.tools.JwtProperties
-import com.template.unit.auth.JwtTokenUtilTest
 import com.template.user.domain.User
 import com.template.user.domain.UserRepository
 import io.jsonwebtoken.Jwts
