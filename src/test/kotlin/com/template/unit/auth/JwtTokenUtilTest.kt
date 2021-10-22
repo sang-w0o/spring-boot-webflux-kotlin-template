@@ -4,8 +4,6 @@ import com.template.security.exception.AuthenticateException
 import com.template.security.tools.JwtTokenUtil
 import com.template.unit.BaseUnitTest
 import com.template.user.domain.User
-import io.jsonwebtoken.Jwts
-import io.jsonwebtoken.SignatureAlgorithm
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.BeforeEach
@@ -15,15 +13,10 @@ import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mockito.`when`
 import reactor.core.publisher.Mono
 import reactor.test.StepVerifier
-import java.util.*
 import kotlin.test.assertFailsWith
 import kotlin.test.assertTrue
 
 class JwtTokenUtilTest : BaseUnitTest() {
-    companion object {
-        const val USER_ID = "userId"
-        const val EXTRA_TIME = 2000000
-    }
 
     private lateinit var jwtTokenUtil: JwtTokenUtil
 
@@ -74,12 +67,7 @@ class JwtTokenUtilTest : BaseUnitTest() {
     @DisplayName("Jwt Payload에 userId가 없는 경우")
     @Test
     fun jwtWithoutUserIdInPayload() {
-        val wrongToken = Jwts.builder()
-            .setClaims(mutableMapOf())
-            .setIssuedAt(Date(System.currentTimeMillis()))
-            .setExpiration(Date(System.currentTimeMillis() + EXTRA_TIME))
-            .signWith(SignatureAlgorithm.HS256, jwtProperties.secret)
-            .compact()
+        val wrongToken = generateTokenWithoutUserIdClaim()
         val exception = assertFailsWith<AuthenticateException> { jwtTokenUtil.extractUserId(wrongToken) }
         assertEquals("JWT Claim에 userId가 없습니다.", exception.message)
     }
@@ -112,28 +100,5 @@ class JwtTokenUtilTest : BaseUnitTest() {
                 true
             }
             .verify()
-    }
-
-    private fun generateExpiredToken(exp: Int): String {
-        val realExp = EXTRA_TIME + exp
-        val claims: MutableMap<String, Any> = mutableMapOf()
-        claims["userId"] = USER_ID
-        return Jwts.builder()
-            .setClaims(claims)
-            .setIssuedAt(Date(System.currentTimeMillis() - realExp))
-            .setExpiration(Date(System.currentTimeMillis() - EXTRA_TIME))
-            .signWith(SignatureAlgorithm.HS256, jwtProperties.secret)
-            .compact()
-    }
-
-    private fun generateOtherSignatureToken(exp: Int): String {
-        val claims: MutableMap<String, Any> = mutableMapOf()
-        claims["userId"] = USER_ID
-        return Jwts.builder()
-            .setClaims(claims)
-            .setIssuedAt(Date(System.currentTimeMillis()))
-            .setExpiration(Date(System.currentTimeMillis() + exp))
-            .signWith(SignatureAlgorithm.HS256, "Other Signature")
-            .compact()
     }
 }
