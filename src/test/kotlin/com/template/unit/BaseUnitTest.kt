@@ -3,6 +3,14 @@ package com.template.unit
 import com.template.security.tools.JwtProperties
 import com.template.user.domain.User
 import com.template.user.domain.UserRepository
+import com.template.util.TestUtils.EMAIL
+import com.template.util.TestUtils.EXTRA_TIME
+import com.template.util.TestUtils.JWT_ACCESS_TOKEN_EXP
+import com.template.util.TestUtils.JWT_REFRESH_TOKEN_EXP
+import com.template.util.TestUtils.JWT_SECRET
+import com.template.util.TestUtils.NAME
+import com.template.util.TestUtils.PASSWORD
+import com.template.util.TestUtils.USER_ID
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
 import org.junit.jupiter.api.extension.ExtendWith
@@ -17,16 +25,6 @@ import java.util.*
 @EnableConfigurationProperties(JwtProperties::class)
 @ContextConfiguration(initializers = [ConfigDataApplicationContextInitializer::class])
 abstract class BaseUnitTest {
-    companion object {
-        const val USER_ID = "generatedId"
-        const val NAME = "userName"
-        const val EMAIL = "email@test.com"
-        const val PASSWORD = "testPassword"
-        const val JWT_SECRET = "TestJwtSecretKey"
-        const val JWT_ACCESS_TOKEN_EXP = 86400000
-        const val JWT_REFRESH_TOKEN_EXP = 604800000
-        const val EXTRA_TIME = 2000000
-    }
 
     @MockBean
     protected lateinit var userRepository: UserRepository

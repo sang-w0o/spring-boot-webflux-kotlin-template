@@ -7,6 +7,7 @@ import com.template.user.domain.User
 import com.template.user.dto.AccessTokenUpdateRequestDto
 import com.template.user.service.UserService
 import com.template.util.TestUtils
+import com.template.util.TestUtils.JWT_REFRESH_TOKEN_EXP
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.mockito.ArgumentMatchers.anyString
