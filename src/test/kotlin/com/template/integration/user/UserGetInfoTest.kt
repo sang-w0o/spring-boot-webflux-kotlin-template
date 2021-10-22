@@ -1,11 +1,9 @@
 package com.template.integration.user
 
 import com.template.integration.ApiIntegrationTest
-import com.template.security.tools.JwtTokenUtil
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 
@@ -15,9 +13,6 @@ class UserGetInfoTest : ApiIntegrationTest() {
     companion object {
         const val API_PATH = "/v1/user/info"
     }
-
-    @Autowired
-    private lateinit var jwtTokenUtil: JwtTokenUtil
 
     @DisplayName("Success")
     @Test
