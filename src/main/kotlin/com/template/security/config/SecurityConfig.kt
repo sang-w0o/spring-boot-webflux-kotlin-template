@@ -9,7 +9,6 @@ import org.springframework.security.config.web.server.invoke
 import org.springframework.security.web.server.SecurityWebFilterChain
 import org.springframework.security.web.server.authentication.AuthenticationWebFilter
 import org.springframework.security.web.server.authentication.ServerAuthenticationConverter
-import org.springframework.security.web.server.authorization.ServerAccessDeniedHandler
 import org.springframework.security.web.server.util.matcher.NegatedServerWebExchangeMatcher
 import org.springframework.security.web.server.util.matcher.ServerWebExchangeMatchers
 
@@ -17,7 +16,6 @@ import org.springframework.security.web.server.util.matcher.ServerWebExchangeMat
 class SecurityConfig(
     private val jwtAuthenticationConverter: ServerAuthenticationConverter,
     private val jwtAuthenticationManager: ReactiveAuthenticationManager,
-    private val serverAccessDeniedHandler: ServerAccessDeniedHandler
 ) {
     @Bean
     fun securityWebFilterChain(http: ServerHttpSecurity): SecurityWebFilterChain {
@@ -36,9 +34,6 @@ class SecurityConfig(
                 authorize("/v1/**", authenticated)
             }
             addFilterAt(jwtAuthenticationWebFilter, SecurityWebFiltersOrder.AUTHENTICATION)
-            exceptionHandling {
-                accessDeniedHandler = serverAccessDeniedHandler
-            }
         }
     }
 }
