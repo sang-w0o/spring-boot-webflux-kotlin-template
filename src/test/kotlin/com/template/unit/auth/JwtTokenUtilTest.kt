@@ -4,8 +4,8 @@ import com.template.security.exception.AuthenticateException
 import com.template.security.tools.JwtTokenUtil
 import com.template.unit.BaseUnitTest
 import com.template.user.domain.User
-import com.template.util.TestUtils
-import com.template.util.TestUtils.USER_ID
+import com.template.util.USER_ID
+import com.template.util.generateExpiredToken
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.BeforeEach
@@ -37,7 +37,7 @@ class JwtTokenUtilTest : BaseUnitTest() {
     @DisplayName("만료된 AccessToken 검증")
     @Test
     fun oldAccessTokenIsExpired() {
-        val oldAccessToken = TestUtils.generateExpiredToken(jwtProperties.accessTokenExp, jwtProperties.secret)
+        val oldAccessToken = generateExpiredToken(jwtProperties.accessTokenExp, jwtProperties.secret)
         val exception = assertFailsWith<AuthenticateException> { jwtTokenUtil.verify(oldAccessToken) }
         assertEquals("Jwt 토큰이 만료되었습니다.", exception.message)
     }
@@ -45,7 +45,7 @@ class JwtTokenUtilTest : BaseUnitTest() {
     @DisplayName("만료된 RefreshToken 검증")
     @Test
     fun oldRefreshTokenIsExpired() {
-        val oldRefreshToken = TestUtils.generateExpiredToken(jwtProperties.refreshTokenExp, jwtProperties.secret)
+        val oldRefreshToken = generateExpiredToken(jwtProperties.refreshTokenExp, jwtProperties.secret)
         val exception = assertFailsWith<AuthenticateException> { jwtTokenUtil.verify(oldRefreshToken) }
         assertEquals("Jwt 토큰이 만료되었습니다.", exception.message)
     }

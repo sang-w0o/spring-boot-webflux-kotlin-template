@@ -5,9 +5,9 @@ import com.template.unit.BaseUnitTest
 import com.template.user.dto.UserCreateRequestDto
 import com.template.user.exception.UserEmailConflictException
 import com.template.user.service.UserService
-import com.template.util.TestUtils.EMAIL
-import com.template.util.TestUtils.NAME
-import com.template.util.TestUtils.PASSWORD
+import com.template.util.EMAIL
+import com.template.util.NAME
+import com.template.util.PASSWORD
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Tag

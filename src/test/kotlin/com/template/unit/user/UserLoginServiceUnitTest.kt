@@ -5,8 +5,8 @@ import com.template.unit.BaseUnitTest
 import com.template.user.dto.UserLoginRequestDto
 import com.template.user.exception.UserLoginException
 import com.template.user.service.UserService
-import com.template.util.TestUtils.EMAIL
-import com.template.util.TestUtils.PASSWORD
+import com.template.util.EMAIL
+import com.template.util.PASSWORD
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Tag

@@ -2,7 +2,7 @@ package com.template.integration.user
 
 import com.template.integration.ApiIntegrationTest
 import com.template.user.dto.AccessTokenUpdateRequestDto
-import com.template.util.TestUtils
+import com.template.util.generateExpiredToken
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
@@ -50,7 +50,7 @@ class UserAccessTokenUpdateTest : ApiIntegrationTest() {
     @DisplayName("Fail - Expired refreshToken")
     @Test
     fun failWithExpiredRefreshToken() {
-        val refreshToken = TestUtils.generateExpiredToken(Integer.valueOf(accessTokenExp), secret)
+        val refreshToken = generateExpiredToken(Integer.valueOf(accessTokenExp), secret)
         val requestDto = AccessTokenUpdateRequestDto(refreshToken)
         val body = client.post().uri(API_PATH)
             .header("Accept", MediaType.APPLICATION_JSON_VALUE)
