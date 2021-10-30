@@ -7,6 +7,9 @@ import com.template.user.exception.UserLoginException
 import com.template.user.service.UserService
 import com.template.util.EMAIL
 import com.template.util.PASSWORD
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
+import io.kotest.matchers.types.shouldBeInstanceOf
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Tag
@@ -17,7 +20,6 @@ import org.springframework.http.HttpStatus
 import reactor.core.publisher.Mono
 import reactor.test.StepVerifier
 import kotlin.test.assertEquals
-import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
 @Tag("UserService-login")
@@ -45,9 +47,9 @@ class UserLoginServiceUnitTest : BaseUnitTest() {
         userService.login(Mono.just(requestDto))
             .`as`(StepVerifier::create)
             .expectNextMatches {
-                assertEquals(it.statusCode, HttpStatus.OK)
-                assertNotNull(it.body!!.accessToken)
-                assertNotNull(it.body!!.refreshToken)
+                it.statusCode shouldBe HttpStatus.OK
+                it.body!!.accessToken shouldNotBe null
+                it.body!!.refreshToken shouldNotBe null
                 true
             }.verifyComplete()
     }
@@ -60,8 +62,8 @@ class UserLoginServiceUnitTest : BaseUnitTest() {
         userService.login(Mono.just(requestDto))
             .`as`(StepVerifier::create)
             .expectErrorMatches {
-                assertEquals(ERROR_MESSAGE, it.message)
-                assertTrue(it is UserLoginException)
+                it.message shouldBe ERROR_MESSAGE
+                it.shouldBeInstanceOf<UserLoginException>()
                 true
             }.verify()
     }

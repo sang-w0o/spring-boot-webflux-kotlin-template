@@ -8,6 +8,9 @@ import com.template.user.service.UserService
 import com.template.util.EMAIL
 import com.template.util.NAME
 import com.template.util.PASSWORD
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
+import io.kotest.matchers.types.shouldBeInstanceOf
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Tag
@@ -18,9 +21,6 @@ import org.mockito.Mockito.`when`
 import org.springframework.http.HttpStatus
 import reactor.core.publisher.Mono
 import reactor.test.StepVerifier
-import kotlin.test.assertEquals
-import kotlin.test.assertNotNull
-import kotlin.test.assertTrue
 
 @Tag("UserService-create")
 class UserCreateServiceUnitTest : BaseUnitTest() {
@@ -44,11 +44,11 @@ class UserCreateServiceUnitTest : BaseUnitTest() {
         userService.create(Mono.just(requestDto))
             .`as`(StepVerifier::create)
             .expectNextMatches {
-                assertEquals(it.statusCode, HttpStatus.CREATED)
-                assertEquals("/v1/user", it.headers["location"]?.get(0) ?: "Wrong")
-                assertEquals(NAME, it.body!!.name)
-                assertEquals(EMAIL, it.body!!.email)
-                assertNotNull(it.body!!.id)
+                it.statusCode shouldBe HttpStatus.CREATED
+                it.headers["location"]!![0] shouldBe "/v1/user"
+                it.body!!.name shouldBe NAME
+                it.body!!.email shouldBe EMAIL
+                it.body!!.id shouldNotBe null
                 true
             }.verifyComplete()
     }
@@ -61,8 +61,8 @@ class UserCreateServiceUnitTest : BaseUnitTest() {
         userService.create(Mono.just(requestDto))
             .`as`(StepVerifier::create)
             .expectErrorMatches {
-                assertEquals("Duplicate email($EMAIL)", it.message!!)
-                assertTrue(it is UserEmailConflictException)
+                it.message shouldBe "Duplicate email($EMAIL)"
+                it.shouldBeInstanceOf<UserEmailConflictException>()
                 true
             }
             .verify()
