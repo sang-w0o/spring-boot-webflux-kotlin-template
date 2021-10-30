@@ -50,6 +50,8 @@ dependencies {
 //    testImplementation("io.projectreactor.tools:blockhound-junit-platform:1.0.6.RELEASE")
     testImplementation("org.junit.platform:junit-platform-launcher:1.8.0")
     testImplementation(kotlin("test-junit"))
+    testImplementation("io.kotest:kotest-runner-junit5:5.0.0.M3")
+    testImplementation("io.kotest:kotest-assertions-core:5.0.0.M3")
 }
 
 tasks.withType<KotlinCompile> {

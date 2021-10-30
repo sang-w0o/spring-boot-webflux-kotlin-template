@@ -8,15 +8,16 @@ import com.template.user.dto.AccessTokenUpdateRequestDto
 import com.template.user.service.UserService
 import com.template.util.JWT_REFRESH_TOKEN_EXP
 import com.template.util.generateExpiredToken
+import io.kotest.assertions.throwables.shouldNotThrowAny
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
+import io.kotest.matchers.types.shouldBeInstanceOf
 import org.junit.jupiter.api.*
-import org.junit.jupiter.api.Assertions.assertTrue
 import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mockito.`when`
 import org.springframework.http.HttpStatus
 import reactor.core.publisher.Mono
 import reactor.test.StepVerifier
-import kotlin.test.assertEquals
-import kotlin.test.assertNotNull
 
 @Tag("UserService-updateAccessToken")
 class UserAccessTokenUpdateServiceUnitTest : BaseUnitTest() {
@@ -44,9 +45,9 @@ class UserAccessTokenUpdateServiceUnitTest : BaseUnitTest() {
         userService.updateAccessToken(Mono.just(requestDto))
             .`as`(StepVerifier::create)
             .expectNextMatches {
-                assertEquals(HttpStatus.OK, it.statusCode)
-                assertNotNull(it.body!!.accessToken)
-                assertDoesNotThrow { jwtTokenUtil.verify(it.body!!.accessToken) }
+                it.statusCode shouldBe HttpStatus.OK
+                it.body!!.accessToken shouldNotBe null
+                shouldNotThrowAny { jwtTokenUtil.verify(it.body!!.accessToken) }
                 true
             }.verifyComplete()
     }
@@ -59,8 +60,8 @@ class UserAccessTokenUpdateServiceUnitTest : BaseUnitTest() {
         userService.updateAccessToken(Mono.just(requestDto))
             .`as`(StepVerifier::create)
             .expectErrorMatches {
-                assertEquals("Jwt 토큰이 만료되었습니다.", it.message!!)
-                assertTrue(it is AuthenticateException)
+                it.message shouldBe "Jwt 토큰이 만료되었습니다."
+                it.shouldBeInstanceOf<AuthenticateException>()
                 true
             }.verify()
     }
@@ -74,8 +75,8 @@ class UserAccessTokenUpdateServiceUnitTest : BaseUnitTest() {
         userService.updateAccessToken(Mono.just(requestDto))
             .`as`(StepVerifier::create)
             .expectErrorMatches {
-                assertEquals("Invalid userId.", it.message!!)
-                assertTrue(it is AuthenticateException)
+                it.message shouldBe "Invalid userId."
+                it.shouldBeInstanceOf<AuthenticateException>()
                 true
             }.verify()
     }

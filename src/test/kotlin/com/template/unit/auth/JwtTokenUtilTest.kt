@@ -6,8 +6,9 @@ import com.template.unit.BaseUnitTest
 import com.template.user.domain.User
 import com.template.util.USER_ID
 import com.template.util.generateExpiredToken
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertFalse
+import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.types.shouldBeInstanceOf
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -15,8 +16,6 @@ import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mockito.`when`
 import reactor.core.publisher.Mono
 import reactor.test.StepVerifier
-import kotlin.test.assertFailsWith
-import kotlin.test.assertTrue
 
 class JwtTokenUtilTest : BaseUnitTest() {
 
@@ -31,47 +30,47 @@ class JwtTokenUtilTest : BaseUnitTest() {
     @Test
     fun refreshTokenIsCreated() {
         val refreshToken = jwtTokenUtil.generateRefreshToken(USER_ID)
-        assertFalse(jwtTokenUtil.isTokenExpired(refreshToken))
+        jwtTokenUtil.isTokenExpired(refreshToken) shouldBe false
     }
 
     @DisplayName("만료된 AccessToken 검증")
     @Test
     fun oldAccessTokenIsExpired() {
         val oldAccessToken = generateExpiredToken(jwtProperties.accessTokenExp, jwtProperties.secret)
-        val exception = assertFailsWith<AuthenticateException> { jwtTokenUtil.verify(oldAccessToken) }
-        assertEquals("Jwt 토큰이 만료되었습니다.", exception.message)
+        val exception = shouldThrow<AuthenticateException> { jwtTokenUtil.verify(oldAccessToken) }
+        exception.message shouldBe "Jwt 토큰이 만료되었습니다."
     }
 
     @DisplayName("만료된 RefreshToken 검증")
     @Test
     fun oldRefreshTokenIsExpired() {
         val oldRefreshToken = generateExpiredToken(jwtProperties.refreshTokenExp, jwtProperties.secret)
-        val exception = assertFailsWith<AuthenticateException> { jwtTokenUtil.verify(oldRefreshToken) }
-        assertEquals("Jwt 토큰이 만료되었습니다.", exception.message)
+        val exception = shouldThrow<AuthenticateException> { jwtTokenUtil.verify(oldRefreshToken) }
+        exception.message shouldBe "Jwt 토큰이 만료되었습니다."
     }
 
     @DisplayName("잘못된 형식의 Jwt 토큰")
     @Test
     fun wrongToken() {
         val wrongToken = "WRONG TOKEN"
-        val exception = assertFailsWith<AuthenticateException> { jwtTokenUtil.verify(wrongToken) }
-        assertEquals("잘못된 형식의 Jwt 토큰입니다.", exception.message)
+        val exception = shouldThrow<AuthenticateException> { jwtTokenUtil.verify(wrongToken) }
+        exception.message shouldBe "잘못된 형식의 Jwt 토큰입니다."
     }
 
     @DisplayName("Signature가 잘못된 Jwt가 주어진 경우")
     @Test
     fun wrongSignatureToken() {
         val wrongToken = generateOtherSignatureToken(jwtProperties.accessTokenExp)
-        val exception = assertFailsWith<AuthenticateException> { jwtTokenUtil.verify(wrongToken) }
-        assertEquals("Jwt Signature이 잘못된 값입니다.", exception.message)
+        val exception = shouldThrow<AuthenticateException> { jwtTokenUtil.verify(wrongToken) }
+        exception.message shouldBe "Jwt Signature이 잘못된 값입니다."
     }
 
     @DisplayName("Jwt Payload에 userId가 없는 경우")
     @Test
     fun jwtWithoutUserIdInPayload() {
         val wrongToken = generateTokenWithoutUserIdClaim()
-        val exception = assertFailsWith<AuthenticateException> { jwtTokenUtil.extractUserId(wrongToken) }
-        assertEquals("JWT Claim에 userId가 없습니다.", exception.message)
+        val exception = shouldThrow<AuthenticateException> { jwtTokenUtil.extractUserId(wrongToken) }
+        exception.message shouldBe "JWT Claim에 userId가 없습니다."
     }
 
     @DisplayName("정상적인 token일 경우 검증 성공")
@@ -83,8 +82,8 @@ class JwtTokenUtilTest : BaseUnitTest() {
         jwtTokenUtil.verify(accessToken)
             .`as`(StepVerifier::create)
             .expectNextMatches {
-                assertTrue(it.principal is User)
-                assertEquals(it.principal, user)
+                it.principal.shouldBeInstanceOf<User>()
+                it.principal shouldBe user
                 true
             }.verifyComplete()
     }
@@ -97,8 +96,8 @@ class JwtTokenUtilTest : BaseUnitTest() {
         jwtTokenUtil.verify(accessToken)
             .`as`(StepVerifier::create)
             .expectErrorMatches {
-                assertEquals("Invalid userId", it.message!!)
-                assertTrue(it is AuthenticateException)
+                it.message shouldBe "Invalid userId"
+                it.shouldBeInstanceOf<AuthenticateException>()
                 true
             }
             .verify()
