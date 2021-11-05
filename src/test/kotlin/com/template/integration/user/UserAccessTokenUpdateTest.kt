@@ -4,12 +4,10 @@ import com.template.integration.ApiIntegrationTest
 import com.template.user.dto.AccessTokenUpdateRequestDto
 import com.template.util.generateExpiredToken
 import org.junit.jupiter.api.DisplayName
-import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 
-@Tag("[POST]v1/user/update-token")
 class UserAccessTokenUpdateTest : ApiIntegrationTest() {
 
     companion object {
