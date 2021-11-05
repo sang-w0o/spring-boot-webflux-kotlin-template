@@ -10,19 +10,16 @@ import com.template.util.PASSWORD
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import io.kotest.matchers.types.shouldBeInstanceOf
+import io.mockk.every
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
-import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
-import org.mockito.ArgumentMatchers.anyString
-import org.mockito.Mockito.`when`
 import org.springframework.http.HttpStatus
 import reactor.core.publisher.Mono
 import reactor.test.StepVerifier
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
-@Tag("UserService-login")
 class UserLoginServiceUnitTest : BaseUnitTest() {
 
     companion object {
@@ -35,6 +32,7 @@ class UserLoginServiceUnitTest : BaseUnitTest() {
 
     @BeforeEach
     fun setUp() {
+        every { userRepository.findByEmailAndPassword(any(), any()) } returns Mono.empty()
         jwtTokenUtil = JwtTokenUtil(jwtProperties, userRepository)
         userService = UserService(userRepository, jwtTokenUtil)
     }
@@ -42,7 +40,7 @@ class UserLoginServiceUnitTest : BaseUnitTest() {
     @DisplayName("Success")
     @Test
     fun success() {
-        `when`(userRepository.findByEmailAndPassword(anyString(), anyString())).thenReturn(Mono.just(getMockUser()))
+        every { userRepository.findByEmailAndPassword(any(), any()) } returns Mono.just(getMockUser())
         val requestDto = UserLoginRequestDto(EMAIL, PASSWORD)
         userService.login(Mono.just(requestDto))
             .`as`(StepVerifier::create)
@@ -57,7 +55,6 @@ class UserLoginServiceUnitTest : BaseUnitTest() {
     @DisplayName("Fail - Wrong email")
     @Test
     fun failWithWrongEmail() {
-        `when`(userRepository.findByEmailAndPassword(anyString(), anyString())).thenReturn(Mono.empty())
         val requestDto = UserLoginRequestDto("wrong@email.com", PASSWORD)
         userService.login(Mono.just(requestDto))
             .`as`(StepVerifier::create)
@@ -71,7 +68,6 @@ class UserLoginServiceUnitTest : BaseUnitTest() {
     @DisplayName("Fail - Wrong password")
     @Test
     fun failWithWrongPassword() {
-        `when`(userRepository.findByEmailAndPassword(anyString(), anyString())).thenReturn(Mono.empty())
         val requestDto = UserLoginRequestDto(EMAIL, "wrongPassword")
         userService.login(Mono.just(requestDto))
             .`as`(StepVerifier::create)

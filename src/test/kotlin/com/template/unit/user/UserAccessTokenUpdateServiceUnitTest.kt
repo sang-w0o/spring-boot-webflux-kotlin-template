@@ -1,37 +1,38 @@
 package com.template.unit.user
 
+import com.ninjasquad.springmockk.MockkBean
 import com.template.security.exception.AuthenticateException
 import com.template.security.tools.JwtTokenUtil
 import com.template.unit.BaseUnitTest
-import com.template.user.domain.User
 import com.template.user.dto.AccessTokenUpdateRequestDto
 import com.template.user.service.UserService
 import com.template.util.JWT_REFRESH_TOKEN_EXP
+import com.template.util.TOKEN
+import com.template.util.USER_ID
 import com.template.util.generateExpiredToken
 import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import io.kotest.matchers.types.shouldBeInstanceOf
+import io.mockk.every
 import org.junit.jupiter.api.*
-import org.mockito.ArgumentMatchers.anyString
-import org.mockito.Mockito.`when`
 import org.springframework.http.HttpStatus
 import reactor.core.publisher.Mono
 import reactor.test.StepVerifier
 
-@Tag("UserService-updateAccessToken")
 class UserAccessTokenUpdateServiceUnitTest : BaseUnitTest() {
 
     private lateinit var userService: UserService
 
+    @MockkBean
     private lateinit var jwtTokenUtil: JwtTokenUtil
-
-    private lateinit var user: User
 
     @BeforeEach
     fun setUp() {
-        user = getMockUser()
-        `when`(userRepository.findById(anyString())).thenReturn(Mono.just(user))
+        every { jwtTokenUtil.generateAccessToken(any()) } returns TOKEN
+        every { jwtTokenUtil.generateRefreshToken(any()) } returns TOKEN
+        every { jwtTokenUtil.extractUserId(any()) } returns USER_ID
+        every { jwtTokenUtil.isTokenExpired(any()) } returns false
         jwtTokenUtil = JwtTokenUtil(jwtProperties, userRepository)
         userService = UserService(userRepository, jwtTokenUtil)
     }
@@ -40,6 +41,7 @@ class UserAccessTokenUpdateServiceUnitTest : BaseUnitTest() {
     @Test
     fun success() {
         val user = getMockUser()
+        every { userRepository.findById(any<String>()) } returns Mono.just(user)
         val refreshToken = jwtTokenUtil.generateRefreshToken(user.id!!)
         val requestDto = AccessTokenUpdateRequestDto(refreshToken)
         userService.updateAccessToken(Mono.just(requestDto))
@@ -69,8 +71,8 @@ class UserAccessTokenUpdateServiceUnitTest : BaseUnitTest() {
     @DisplayName("Fail - Invalid userId")
     @Test
     fun failWithInvalidUserId() {
-        `when`(userRepository.findById(anyString())).thenReturn(Mono.empty())
-        val refreshToken = jwtTokenUtil.generateRefreshToken(user.id!!)
+        every { userRepository.findById(any<String>()) } returns Mono.empty()
+        val refreshToken = jwtTokenUtil.generateRefreshToken(USER_ID)
         val requestDto = AccessTokenUpdateRequestDto(refreshToken)
         userService.updateAccessToken(Mono.just(requestDto))
             .`as`(StepVerifier::create)

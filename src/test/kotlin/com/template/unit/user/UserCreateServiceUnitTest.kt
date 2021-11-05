@@ -11,18 +11,14 @@ import com.template.util.PASSWORD
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import io.kotest.matchers.types.shouldBeInstanceOf
+import io.mockk.every
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
-import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
-import org.mockito.ArgumentMatchers.any
-import org.mockito.ArgumentMatchers.anyString
-import org.mockito.Mockito.`when`
 import org.springframework.http.HttpStatus
 import reactor.core.publisher.Mono
 import reactor.test.StepVerifier
 
-@Tag("UserService-create")
 class UserCreateServiceUnitTest : BaseUnitTest() {
 
     private lateinit var userService: UserService
@@ -38,8 +34,8 @@ class UserCreateServiceUnitTest : BaseUnitTest() {
     @DisplayName("Success")
     @Test
     fun success() {
-        `when`(userRepository.save(any())).thenReturn(Mono.just(getMockUser()))
-        `when`(userRepository.existsByEmail(anyString())).thenReturn(Mono.just(false))
+        every { userRepository.save(any()) } returns Mono.just(getMockUser())
+        every { userRepository.existsByEmail(any()) } returns Mono.just(false)
         val requestDto = UserCreateRequestDto(NAME, PASSWORD, EMAIL)
         userService.create(Mono.just(requestDto))
             .`as`(StepVerifier::create)
@@ -56,7 +52,7 @@ class UserCreateServiceUnitTest : BaseUnitTest() {
     @DisplayName("Fail - Conflict email")
     @Test
     fun failWithConflictEmail() {
-        `when`(userRepository.existsByEmail(anyString())).thenReturn(Mono.just(true))
+        every { userRepository.existsByEmail(any()) } returns Mono.just(true)
         val requestDto = UserCreateRequestDto(NAME, PASSWORD, EMAIL)
         userService.create(Mono.just(requestDto))
             .`as`(StepVerifier::create)
