@@ -1,7 +1,6 @@
 package com.template.unit.user
 
 import com.template.unit.BaseUnitTest
-import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 
 /**
@@ -10,7 +9,6 @@ import org.junit.jupiter.api.Test
  * `JwtTokenUtil#verify()`에 대한 단위 테스트를 작성하는 것으로 대체했습니다.
  */
 
-@Tag("UserService-getInfo")
 class UserInfoServiceUnitTest : BaseUnitTest() {
 
     @Test

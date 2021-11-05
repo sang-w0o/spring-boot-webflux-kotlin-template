@@ -9,11 +9,10 @@ import com.template.util.generateExpiredToken
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
+import io.mockk.every
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
-import org.mockito.ArgumentMatchers.anyString
-import org.mockito.Mockito.`when`
 import reactor.core.publisher.Mono
 import reactor.test.StepVerifier
 
@@ -77,7 +76,7 @@ class JwtTokenUtilTest : BaseUnitTest() {
     @Test
     fun correctTokenVerifyComplete() {
         val user = getMockUser()
-        `when`(userRepository.findById(anyString())).thenReturn(Mono.just(user))
+        every { userRepository.findById(any<String>()) } returns Mono.just(user)
         val accessToken = jwtTokenUtil.generateAccessToken(USER_ID)
         jwtTokenUtil.verify(accessToken)
             .`as`(StepVerifier::create)
@@ -91,7 +90,7 @@ class JwtTokenUtilTest : BaseUnitTest() {
     @DisplayName("존재하지 않는 userId인 경우 검증 실패")
     @Test
     fun tokenWithInvalidUserId() {
-        `when`(userRepository.findById(anyString())).thenReturn(Mono.empty())
+        every { userRepository.findById(any<String>()) } returns Mono.empty()
         val accessToken = jwtTokenUtil.generateAccessToken(USER_ID)
         jwtTokenUtil.verify(accessToken)
             .`as`(StepVerifier::create)

@@ -17,6 +17,7 @@ fun generateExpiredToken(exp: Int, secret: String): String {
 }
 
 const val USER_ID = "generatedId"
+const val TOKEN = "token"
 const val NAME = "userName"
 const val EMAIL = "email@test.com"
 const val PASSWORD = "testPassword"

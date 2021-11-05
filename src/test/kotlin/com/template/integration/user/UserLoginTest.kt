@@ -8,12 +8,10 @@ import com.template.util.NAME
 import com.template.util.PASSWORD
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
-import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 
-@Tag("[POST]v1/user/login")
 class UserLoginTest : ApiIntegrationTest() {
 
     companion object {

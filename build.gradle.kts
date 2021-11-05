@@ -52,6 +52,7 @@ dependencies {
     testImplementation(kotlin("test-junit"))
     testImplementation("io.kotest:kotest-runner-junit5:5.0.0.M3")
     testImplementation("io.kotest:kotest-assertions-core:5.0.0.M3")
+    testImplementation("com.ninja-squad:springmockk:3.0.1")
 }
 
 tasks.withType<KotlinCompile> {
