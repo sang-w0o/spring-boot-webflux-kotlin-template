@@ -1,8 +1,8 @@
 package com.template.integration.user
 
 import com.template.integration.ApiIntegrationTest
+import com.template.user.controller.request.UserCreateRequest
 import com.template.user.domain.User
-import com.template.user.dto.UserCreateRequestDto
 import com.template.util.EMAIL
 import com.template.util.NAME
 import com.template.util.PASSWORD
@@ -20,10 +20,10 @@ class UserCreateTest : ApiIntegrationTest() {
     @DisplayName("Success")
     @Test
     fun success() {
-        val requestDto = UserCreateRequestDto(NAME, PASSWORD, EMAIL)
+        val request = UserCreateRequest(NAME, PASSWORD, EMAIL)
         client.post().uri(API_PATH)
             .header("Accept", MediaType.APPLICATION_JSON_VALUE)
-            .bodyValue(requestDto)
+            .bodyValue(request)
             .exchange()
             .expectStatus().isCreated
             .expectHeader().contentType(MediaType.APPLICATION_JSON)
@@ -38,10 +38,10 @@ class UserCreateTest : ApiIntegrationTest() {
     @Test
     fun failWithConflictingEmail() {
         userRepository.save(User(NAME, EMAIL, PASSWORD)).block()
-        val requestDto = UserCreateRequestDto(NAME, PASSWORD, EMAIL)
+        val request = UserCreateRequest(NAME, PASSWORD, EMAIL)
         val body = client.post().uri(API_PATH)
             .header("Accept", MediaType.APPLICATION_JSON_VALUE)
-            .bodyValue(requestDto)
+            .bodyValue(request)
             .exchange()
             .expectStatus().isEqualTo(HttpStatus.CONFLICT)
             .expectHeader().contentType(MediaType.APPLICATION_JSON)
@@ -52,10 +52,10 @@ class UserCreateTest : ApiIntegrationTest() {
     @DisplayName("Fail - empty name")
     @Test
     fun failWithEmptyName() {
-        val requestDto = UserCreateRequestDto(" ", PASSWORD, EMAIL)
+        val request = UserCreateRequest(" ", PASSWORD, EMAIL)
         val body = client.post().uri(API_PATH)
             .header("Accept", MediaType.APPLICATION_JSON_VALUE)
-            .bodyValue(requestDto)
+            .bodyValue(request)
             .exchange()
             .expectStatus().isBadRequest
             .expectHeader().contentType(MediaType.APPLICATION_JSON)
@@ -66,10 +66,10 @@ class UserCreateTest : ApiIntegrationTest() {
     @DisplayName("Fail - empty email")
     @Test
     fun failWithEmptyEmail() {
-        val requestDto = UserCreateRequestDto(NAME, PASSWORD, " ")
+        val request = UserCreateRequest(NAME, PASSWORD, " ")
         val body = client.post().uri(API_PATH)
             .header("Accept", MediaType.APPLICATION_JSON_VALUE)
-            .bodyValue(requestDto)
+            .bodyValue(request)
             .exchange()
             .expectStatus().isBadRequest
             .expectHeader().contentType(MediaType.APPLICATION_JSON)
@@ -80,10 +80,10 @@ class UserCreateTest : ApiIntegrationTest() {
     @DisplayName("Fail - Wrong email format")
     @Test
     fun failWithWrongEmailFormat() {
-        val requestDto = UserCreateRequestDto(NAME, PASSWORD, "wrongEmailFormat")
+        val request = UserCreateRequest(NAME, PASSWORD, "wrongEmailFormat")
         val body = client.post().uri(API_PATH)
             .header("Accept", MediaType.APPLICATION_JSON_VALUE)
-            .bodyValue(requestDto)
+            .bodyValue(request)
             .exchange()
             .expectStatus().isBadRequest
             .expectHeader().contentType(MediaType.APPLICATION_JSON)

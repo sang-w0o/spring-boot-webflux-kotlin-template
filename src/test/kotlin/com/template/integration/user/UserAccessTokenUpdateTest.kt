@@ -1,7 +1,7 @@
 package com.template.integration.user
 
 import com.template.integration.ApiIntegrationTest
-import com.template.user.dto.AccessTokenUpdateRequestDto
+import com.template.user.controller.request.AccessTokenUpdateRequest
 import com.template.util.generateExpiredToken
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -19,10 +19,10 @@ class UserAccessTokenUpdateTest : ApiIntegrationTest() {
     fun success() {
         val userId = generateUser().id!!
         val refreshToken = jwtTokenUtil.generateRefreshToken(userId)
-        val requestDto = AccessTokenUpdateRequestDto(refreshToken)
+        val request = AccessTokenUpdateRequest(refreshToken)
         client.post().uri(API_PATH)
             .header("Accept", MediaType.APPLICATION_JSON_VALUE)
-            .bodyValue(requestDto)
+            .bodyValue(request)
             .exchange()
             .expectStatus().isOk
             .expectHeader().contentType(MediaType.APPLICATION_JSON)
@@ -34,10 +34,10 @@ class UserAccessTokenUpdateTest : ApiIntegrationTest() {
     @Test
     fun failWithInvalidUserId() {
         val refreshToken = jwtTokenUtil.generateRefreshToken("WRONG_USER_ID")
-        val requestDto = AccessTokenUpdateRequestDto(refreshToken)
+        val request = AccessTokenUpdateRequest(refreshToken)
         val body = client.post().uri(API_PATH)
             .header("Accept", MediaType.APPLICATION_JSON_VALUE)
-            .bodyValue(requestDto)
+            .bodyValue(request)
             .exchange()
             .expectStatus().isUnauthorized
             .expectHeader().contentType(MediaType.APPLICATION_JSON)
@@ -49,10 +49,10 @@ class UserAccessTokenUpdateTest : ApiIntegrationTest() {
     @Test
     fun failWithExpiredRefreshToken() {
         val refreshToken = generateExpiredToken(Integer.valueOf(accessTokenExp), secret)
-        val requestDto = AccessTokenUpdateRequestDto(refreshToken)
+        val request = AccessTokenUpdateRequest(refreshToken)
         val body = client.post().uri(API_PATH)
             .header("Accept", MediaType.APPLICATION_JSON_VALUE)
-            .bodyValue(requestDto)
+            .bodyValue(request)
             .exchange()
             .expectStatus().isUnauthorized
             .expectHeader().contentType(MediaType.APPLICATION_JSON)
