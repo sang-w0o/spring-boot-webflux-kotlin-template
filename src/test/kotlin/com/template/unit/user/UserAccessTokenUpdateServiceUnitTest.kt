@@ -4,7 +4,6 @@ import com.ninjasquad.springmockk.MockkBean
 import com.template.security.exception.AuthenticateException
 import com.template.security.tools.JwtTokenUtil
 import com.template.unit.BaseUnitTest
-import com.template.user.dto.AccessTokenUpdateRequestDto
 import com.template.user.service.UserService
 import com.template.util.JWT_REFRESH_TOKEN_EXP
 import com.template.util.TOKEN
@@ -43,8 +42,7 @@ class UserAccessTokenUpdateServiceUnitTest : BaseUnitTest() {
         val user = getMockUser()
         every { userRepository.findById(any<String>()) } returns Mono.just(user)
         val refreshToken = jwtTokenUtil.generateRefreshToken(user.id!!)
-        val requestDto = AccessTokenUpdateRequestDto(refreshToken)
-        userService.updateAccessToken(Mono.just(requestDto))
+        userService.updateAccessToken(Mono.just(refreshToken))
             .`as`(StepVerifier::create)
             .expectNextMatches {
                 it.statusCode shouldBe HttpStatus.OK
@@ -58,8 +56,7 @@ class UserAccessTokenUpdateServiceUnitTest : BaseUnitTest() {
     @Test
     fun failWithExpiredRefreshToken() {
         val refreshToken = generateExpiredToken(JWT_REFRESH_TOKEN_EXP, jwtProperties.secret)
-        val requestDto = AccessTokenUpdateRequestDto(refreshToken)
-        userService.updateAccessToken(Mono.just(requestDto))
+        userService.updateAccessToken(Mono.just(refreshToken))
             .`as`(StepVerifier::create)
             .expectErrorMatches {
                 it.message shouldBe "Jwt 토큰이 만료되었습니다."
@@ -73,8 +70,7 @@ class UserAccessTokenUpdateServiceUnitTest : BaseUnitTest() {
     fun failWithInvalidUserId() {
         every { userRepository.findById(any<String>()) } returns Mono.empty()
         val refreshToken = jwtTokenUtil.generateRefreshToken(USER_ID)
-        val requestDto = AccessTokenUpdateRequestDto(refreshToken)
-        userService.updateAccessToken(Mono.just(requestDto))
+        userService.updateAccessToken(Mono.just(refreshToken))
             .`as`(StepVerifier::create)
             .expectErrorMatches {
                 it.message shouldBe "Invalid userId."
