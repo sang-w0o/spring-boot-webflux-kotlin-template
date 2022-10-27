@@ -1,8 +1,8 @@
 package com.template.integration.user
 
 import com.template.integration.ApiIntegrationTest
+import com.template.user.controller.request.UserLoginRequest
 import com.template.user.domain.User
-import com.template.user.dto.UserLoginRequestDto
 import com.template.util.EMAIL
 import com.template.util.NAME
 import com.template.util.PASSWORD
@@ -27,10 +27,10 @@ class UserLoginTest : ApiIntegrationTest() {
     @DisplayName("Success")
     @Test
     fun success() {
-        val requestDto = UserLoginRequestDto(EMAIL, PASSWORD)
+        val request = UserLoginRequest(EMAIL, PASSWORD)
         client.post().uri(API_PATH)
             .header("Accept", MediaType.APPLICATION_JSON_VALUE)
-            .bodyValue(requestDto)
+            .bodyValue(request)
             .exchange()
             .expectStatus().isOk
             .expectHeader().contentType(MediaType.APPLICATION_JSON)
@@ -42,10 +42,10 @@ class UserLoginTest : ApiIntegrationTest() {
     @DisplayName("Fail - Wrong email")
     @Test
     fun failWithWrongEmail() {
-        val requestDto = UserLoginRequestDto("wrong@email.com", PASSWORD)
+        val request = UserLoginRequest("wrong@email.com", PASSWORD)
         val body = client.post().uri(API_PATH)
             .header("Accept", MediaType.APPLICATION_JSON_VALUE)
-            .bodyValue(requestDto)
+            .bodyValue(request)
             .exchange()
             .expectStatus().isNotFound
             .expectHeader().contentType(MediaType.APPLICATION_JSON)
@@ -56,10 +56,10 @@ class UserLoginTest : ApiIntegrationTest() {
     @DisplayName("Fail - Wrong password")
     @Test
     fun failWithWrongPassword() {
-        val requestDto = UserLoginRequestDto(EMAIL, "wrongPassword")
+        val request = UserLoginRequest(EMAIL, "wrongPassword")
         val body = client.post().uri(API_PATH)
             .header("Accept", MediaType.APPLICATION_JSON_VALUE)
-            .bodyValue(requestDto)
+            .bodyValue(request)
             .exchange()
             .expectStatus().isNotFound
             .expectHeader().contentType(MediaType.APPLICATION_JSON)
@@ -70,10 +70,10 @@ class UserLoginTest : ApiIntegrationTest() {
     @DisplayName("Fail - Empty email")
     @Test
     fun wailWithEmptyEmail() {
-        val requestDto = UserLoginRequestDto("", PASSWORD)
+        val request = UserLoginRequest("", PASSWORD)
         val body = client.post().uri(API_PATH)
             .header("Accept", MediaType.APPLICATION_JSON_VALUE)
-            .bodyValue(requestDto)
+            .bodyValue(request)
             .exchange()
             .expectStatus().isBadRequest
             .expectHeader().contentType(MediaType.APPLICATION_JSON)
@@ -84,10 +84,10 @@ class UserLoginTest : ApiIntegrationTest() {
     @DisplayName("Fail - Wrong email format")
     @Test
     fun failWithWrongEmailFormat() {
-        val requestDto = UserLoginRequestDto("wrongEmailFormat", PASSWORD)
+        val request = UserLoginRequest("wrongEmailFormat", PASSWORD)
         val body = client.post().uri(API_PATH)
             .header("Accept", MediaType.APPLICATION_JSON_VALUE)
-            .bodyValue(requestDto)
+            .bodyValue(request)
             .exchange()
             .expectStatus().isBadRequest
             .expectHeader().contentType(MediaType.APPLICATION_JSON)
@@ -98,10 +98,10 @@ class UserLoginTest : ApiIntegrationTest() {
     @DisplayName("Fail - Empty password")
     @Test
     fun failWithEmptyPassword() {
-        val requestDto = UserLoginRequestDto(EMAIL, " ")
+        val request = UserLoginRequest(EMAIL, " ")
         val body = client.post().uri(API_PATH)
             .header("Accept", MediaType.APPLICATION_JSON_VALUE)
-            .bodyValue(requestDto)
+            .bodyValue(request)
             .exchange()
             .expectStatus().isBadRequest
             .expectHeader().contentType(MediaType.APPLICATION_JSON)

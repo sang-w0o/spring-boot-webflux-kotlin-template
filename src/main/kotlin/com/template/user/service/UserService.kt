@@ -31,9 +31,7 @@ class UserService(
             .flatMap {
                 userRepository.save(User(it.name, it.email, it.password))
             }
-            .map {
-                UserInfoResponseDto(it)
-            }
+            .map { UserInfoResponseDto.from(it) }
             .map {
                 ResponseEntity.created(URI.create("/v1/user")).body(it)
             }
@@ -59,7 +57,7 @@ class UserService(
     fun getInfo(user: Mono<User>): Mono<ResponseEntity<UserInfoResponseDto>> {
         return user
             .map {
-                UserInfoResponseDto(it)
+                UserInfoResponseDto.from(it)
             }
             .map {
                 ResponseEntity.ok().body(it)
@@ -67,17 +65,17 @@ class UserService(
     }
 
     @Transactional(readOnly = true)
-    fun updateAccessToken(dto: Mono<AccessTokenUpdateRequestDto>): Mono<ResponseEntity<AccessTokenUpdateResponseDto>> {
-        return dto
+    fun updateAccessToken(refreshToken: Mono<String>): Mono<ResponseEntity<AccessTokenUpdateResponseDto>> {
+        return refreshToken
             .flatMap {
-                userRepository.findById(jwtTokenUtil.extractUserId(it.refreshToken))
+                userRepository.findById(jwtTokenUtil.extractUserId(it))
                     .switchIfEmpty(Mono.error(AuthenticateException("Invalid userId.")))
                     .single()
             }
             .map {
                 val accessToken = jwtTokenUtil.generateRefreshToken(it.id!!)
-                val responseDto = AccessTokenUpdateResponseDto(accessToken)
-                ResponseEntity.ok().body(responseDto)
+                val response = AccessTokenUpdateResponseDto(accessToken)
+                ResponseEntity.ok().body(response)
             }
     }
 }

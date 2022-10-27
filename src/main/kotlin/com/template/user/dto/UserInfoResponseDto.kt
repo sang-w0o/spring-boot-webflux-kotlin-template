@@ -7,5 +7,11 @@ data class UserInfoResponseDto(
     val name: String,
     val email: String
 ) {
-    constructor(user: User) : this(user.id!!, user.name, user.email)
+    companion object {
+        fun from(user: User) = UserInfoResponseDto(
+            user.id!!,
+            user.name,
+            user.email
+        )
+    }
 }
